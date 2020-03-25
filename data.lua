@@ -1,31 +1,21 @@
-local dummy_sound_filename = "__core__/sound/achievement-unlocked.ogg" -- currently unused
+local dummy_sound_filename = "__core__/sound/achievement-unlocked.ogg"
 local dummy_sprite_filename = "__core__/graphics/empty.png"
-local dummy_color = {1, 1, 1, 1} -- white
+local dummy_render_layer = "object"
 
+-- TODO Bilka: idk where to put this
 local function add_dummy_icon(prototype)
   prototype.icon = dummy_sprite_filename
   prototype.icon_size = 1
   return prototype
 end
 
--- common base prototypes
-local function add_item_properties(prototype)
-  prototype = add_dummy_icon(prototype)
-  prototype.stack_size = 1
-  return prototype
-end
-local function add_selection_tool_properties(prototype)
-  prototype = add_item_properties(prototype)
-  prototype.selection_color = dummy_color
-  prototype.alt_selection_color = dummy_color
-  prototype.selection_mode = "nothing"
-  prototype.alt_selection_mode = "nothing"
-  prototype.selection_cursor_box_type = "entity"
-  prototype.alt_selection_cursor_box_type = "entity"
-  return prototype
-end
-
 -- common properties
+local function dummy_color() return {1, 1, 1, 1} end -- white
+local function dummy_bounding_box() return {{0, 0}, {0, 0}} end
+local function dummy_vector() return {0, 0} end
+local function dummy_sound()
+  return { filename = dummy_sound_filename }
+end
 local function dummy_sprite()
   return
   {
@@ -33,7 +23,12 @@ local function dummy_sprite()
     size = 1
   }
 end
-local function dummy_8waysprite()
+local function dummy_rotated_sprite()
+  local sprite = dummy_sprite()
+  sprite.direction_count = 1
+  return sprite
+end
+local function dummy_8_way_sprite()
   return
   {
     north = dummy_sprite(),
@@ -46,16 +41,26 @@ local function dummy_8waysprite()
     north_west = dummy_sprite()
   }
 end
+local function dummy_animation()
+  local sprite = dummy_sprite()
+  sprite.frame_count = 1
+  return sprite
+end
+local function dummy_rotated_animation()
+  local animation = dummy_animation()
+  animation.direction_count = 1
+  return animation
+end
 local function dummy_attack_parameters()
   return
   {
     type = "beam",
-    ammo_type =
+    ammo_type = -- may be redundant -- TODO Bilka: Check if this is actually the case
     {
       category = "dummy-ammo-category"
     },
-    range = 1.0,
-    cooldown = 1.0
+    range = 1,
+    cooldown = 1
   }
 end
 local function dummy_rail_piece_layers()
@@ -67,10 +72,118 @@ local function dummy_rail_piece_layers()
     stone_path = dummy_sprite()
   }
 end
+local function dummy_oriented_cliff_prototype()
+  return
+  {
+    collision_bounding_box = dummy_bounding_box(),
+    pictures = { dummy_sprite() },
+    fill_volume = 1
+  }
+end
+local function dummy_electric_input_energy_source()
+  return
+    {
+      type = "electric",
+      buffer_capacity = "1J",
+      input_flow_limit = "1W",
+      usage_priority = "primary-input"
+    }
+end
+local function dummy_void_energy_source()
+  return { type = "void" }
+end
+local function dummy_burner_energy_source()
+  return { type = "burner", fuel_inventory_size = 1}
+end
+local function dummy_wire_connection_point()
+  return
+  {
+    wire = {},
+    shadow = {}
+  }
+end
+
+-- common base prototypes
+-- items
+local function add_item_properties(prototype)
+  prototype = add_dummy_icon(prototype)
+  prototype.stack_size = 1
+  return prototype
+end
+local function add_selection_tool_properties(prototype)
+  prototype = add_item_properties(prototype)
+  prototype.selection_color = dummy_color()
+  prototype.alt_selection_color = dummy_color()
+  prototype.selection_mode = "nothing"
+  prototype.alt_selection_mode = "nothing"
+  prototype.selection_cursor_box_type = "entity"
+  prototype.alt_selection_cursor_box_type = "entity"
+  return prototype
+end
+-- entities
+local function add_combinator_properties(prototype)
+  prototype.energy_source = dummy_void_energy_source()
+  prototype.active_energy_usage = "1J"
+  prototype.sprites = dummy_sprite()
+  prototype.activity_led_sprites = dummy_sprite()
+  prototype.input_connection_bounding_box = dummy_bounding_box()
+  prototype.output_connection_bounding_box = dummy_bounding_box()
+  prototype.activity_led_light_offsets =
+  {
+    dummy_vector(),
+    dummy_vector(),
+    dummy_vector(),
+    dummy_vector()
+  }
+  prototype.screen_light_offsets =
+  {
+    dummy_vector(),
+    dummy_vector(),
+    dummy_vector(),
+    dummy_vector()
+  }
+  prototype.input_connection_points =
+  {
+    dummy_wire_connection_point(),
+    dummy_wire_connection_point(),
+    dummy_wire_connection_point(),
+    dummy_wire_connection_point()
+  }
+  prototype.output_connection_points =
+  {
+    dummy_wire_connection_point(),
+    dummy_wire_connection_point(),
+    dummy_wire_connection_point(),
+    dummy_wire_connection_point()
+  }
+  return prototype
+end
+local function add_vehicle_properties(prototype)
+  prototype.braking_force = 1
+  prototype.energy_per_hit_point = 1
+  prototype.friction_force = 1
+  prototype.weight = 1
+  return prototype
+end
+local function add_rolling_stock_properties(prototype)
+  prototype = add_vehicle_properties(prototype)
+  prototype.air_resistance = 1
+
+  -- copied from vanilla because these values are finicky
+  prototype.collision_box = {{-0.6, -2.4}, {0.6, 2.4}}
+  prototype.connection_distance = 3
+  prototype.joint_distance = 4
+
+  prototype.max_speed = 1
+  prototype.pictures = dummy_rotated_sprite()
+  prototype.vertical_selection_shift = 1
+  return prototype
+end
 
 data:extend(
 {
   {
+    -- copied from vanila
     type="map-settings",
     name="map-settings",
 
@@ -207,6 +320,10 @@ data:extend(
     type = "resource-category",
     name = "basic-solid"
   },
+  {
+    type = "fuel-category",
+    name = "chemical"
+  },
 
   -- stuff needed for core prototypes
   add_dummy_icon
@@ -236,7 +353,7 @@ data:extend(
     type = "equipment-category",
     name = "dummy-equipment-category"
   },
-  {
+  { -- TODO move down to normal prototypes ?
     type = "active-defense-equipment",
     name = "dummy-active-defense-equipment",
     sprite = dummy_sprite(),
@@ -245,13 +362,7 @@ data:extend(
       width = 1,
       height = 1
     },
-    energy_source =
-    {
-      type = "electric",
-      buffer_capacity = "10kJ",
-      input_flow_limit = "10kW",
-      usage_priority = "primary-input"
-    },
+    energy_source = dummy_electric_input_energy_source(),
     categories = {"dummy-equipment-category"},
     automatic = false,
     ability_icon = dummy_sprite(),
@@ -262,7 +373,7 @@ data:extend(
     type = "module-category",
     name = "dummy-module-category"
   },
-  add_dummy_icon
+  add_dummy_icon -- TODO move down to normal prototypes
   {
     type = "straight-rail",
     name = "dummy-straight-rail",
@@ -282,10 +393,10 @@ data:extend(
       curved_rail_horizontal_right_top = dummy_rail_piece_layers(),
       curved_rail_horizontal_right_bottom = dummy_rail_piece_layers(),
       curved_rail_horizontal_left_bottom = dummy_rail_piece_layers(),
-      rail_endings = dummy_8waysprite()
+      rail_endings = dummy_8_way_sprite()
     }
   },
-  add_dummy_icon
+  add_dummy_icon -- TODO move down to normal prototypes
   {
     type = "curved-rail",
     name = "dummy-curved-rail",
@@ -305,11 +416,12 @@ data:extend(
       curved_rail_horizontal_right_top = dummy_rail_piece_layers(),
       curved_rail_horizontal_right_bottom = dummy_rail_piece_layers(),
       curved_rail_horizontal_left_bottom = dummy_rail_piece_layers(),
-      rail_endings = dummy_8waysprite()
+      rail_endings = dummy_8_way_sprite()
     }
   },
 
   -- the prototypes
+  -- items
   add_item_properties
   {
     type = "ammo",
@@ -349,7 +461,7 @@ data:extend(
   add_selection_tool_properties
   {
     type = "copy-paste-tool",
-    name = "copy-paste-tool" -- also core prototype
+    name = "copy-paste-tool" -- also a core prototype
   },
   add_selection_tool_properties
   {
@@ -414,7 +526,7 @@ data:extend(
     type = "repair-tool",
     name = "dummy-repair-tool",
     infinite = true,
-    speed = 1.0
+    speed = 1
   },
   add_selection_tool_properties
   {
@@ -432,7 +544,289 @@ data:extend(
     type = "upgrade-item",
     name = "dummy-upgrade-item"
   },
+  -- entities
+  {
+    type = "accumulator",
+    name = "dummy-accumulator",
+    energy_source = dummy_electric_input_energy_source(),
+    picture = dummy_sprite(),
+    charge_cooldown = 1,
+    discharge_cooldown = 1
+  },
+  {
+    type = "ammo-turret",
+    name = "dummy-ammo-turret",
+    call_for_help_radius = 1,
+    attack_parameters = dummy_attack_parameters(),
+    folded_animation = dummy_rotated_animation(),
+    automated_ammo_count = 1,
+    inventory_size = 1
+  },
+  add_combinator_properties
+  {
+    type = "arithmetic-combinator",
+    name = "dummy-arithmetic-combinator",
+    plus_symbol_sprites = dummy_sprite(),
+    minus_symbol_sprites = dummy_sprite(),
+    multiply_symbol_sprites = dummy_sprite(),
+    divide_symbol_sprites = dummy_sprite(),
+    modulo_symbol_sprites = dummy_sprite(),
+    power_symbol_sprites = dummy_sprite(),
+    left_shift_symbol_sprites = dummy_sprite(),
+    right_shift_symbol_sprites = dummy_sprite(),
+    and_symbol_sprites = dummy_sprite(),
+    or_symbol_sprites = dummy_sprite(),
+    xor_symbol_sprites = dummy_sprite()
+  },
+  {
+    type = "arrow",
+    name = "dummy-arrow",
+    arrow_picture = dummy_sprite()
+  },
+  {
+    type = "artillery-flare",
+    name = "dummy-artillery-flare",
+    life_time = 1,
+    pictures = {dummy_animation()},
+    render_layer = dummy_render_layer,
+    render_layer_when_on_ground = dummy_render_layer,
+    map_color = dummy_color()
+  },
+  {
+    type = "artillery-projectile",
+    name = "dummy-artillery-projectile",
+    reveal_map = true,
+    map_color = dummy_color()
+  },
+  {
+    type = "artillery-turret",
+    name = "dummy-artillery-turret",
+    ammo_stack_limit = 1,
+    automated_ammo_count = 1,
+    gun = "dummy-gun",
+    inventory_size = 1,
+    manual_range_modifier = 1,
+    turret_rotation_speed = 1
+  },
+  add_rolling_stock_properties
+  {
+    type = "artillery-wagon",
+    name = "dummy-artillery-wagon",
+    ammo_stack_limit = 1,
+    gun = "dummy-gun",
+    inventory_size = 1,
+    manual_range_modifier = 1,
+    turret_rotation_speed = 1
+  },
+  {
+    type = "assembling-machine",
+    name = "dummy-assembling-machine",
+    energy_usage = "1J",
+    energy_source = dummy_void_energy_source(),
+    crafting_speed = 1,
+    crafting_categories = {"crafting"}
+  },
+  {
+    type = "beacon",
+    name = "dummy-beacon",
+    animation = dummy_animation(),
+    animation_shadow = dummy_animation(),
+    base_picture = dummy_sprite(),
+    distribution_effectivity = 1,
+    energy_source = dummy_void_energy_source(),
+    energy_usage = "1J",
+    module_specification = {},
+    supply_area_distance = 1
+  },
+  {
+    type = "beam",
+    name = "dummy-beam",
+    body = {dummy_animation()},
+    damage_interval = 1,
+    head = dummy_animation(),
+    tail = dummy_animation(),
+    width = 1
+  },
+  {
+    type = "boiler",
+    name = "dummy-boiler",
+    burning_cooldown = 1,
+    energy_consumption = "1J",
+    energy_source = dummy_void_energy_source(),
 
+    -- copied from vanilla because these values are finicky
+    collision_box = {{-1.29, -0.79}, {1.29, 0.79}},
+    fluid_box = {
+      pipe_connections =
+      {
+        {
+          position = {-2, 0.5}
+        }
+      }
+    },
+    output_fluid_box = {
+      pipe_connections =
+      {
+        {
+          position = {0, -1.5}
+        }
+      }
+    },
+
+    target_temperature = 1,
+    structure =
+    {
+      north = dummy_sprite(),
+      east = dummy_sprite(),
+      south = dummy_sprite(),
+      west = dummy_sprite(),
+    },
+    fire = {},
+    fire_glow = {},
+  },
+  {
+    type = "burner-generator",
+    name = "dummy-burner-generator",
+    animation = dummy_animation(),
+    burner = dummy_burner_energy_source(),
+    energy_source = dummy_electric_input_energy_source(), -- HACK
+    max_power_output = "1J"
+  },
+  add_vehicle_properties
+  {
+    type = "car",
+    name = "dummy-car",
+    animation = dummy_rotated_animation(),
+    energy_source = dummy_void_energy_source(),
+    consumption = "1J",
+    effectivity = 1,
+    inventory_size = 1,
+    rotation_speed = 1
+  },
+  add_rolling_stock_properties
+  {
+    type = "cargo-wagon",
+    name = "dummy-cargo-wagon",
+    inventory_size = 1
+  },
+  {
+    type = "character",
+    name = "character", -- also a core prototype
+    mining_speed = 1,
+    running_speed = 1,
+    distance_per_frame = 1,
+    maximum_corner_sliding_distance = 1,
+    heartbeat = dummy_sound(),
+    eat = dummy_sound(),
+    inventory_size = 1,
+    build_distance = 1,
+    drop_item_distance = 1,
+    reach_distance = 1,
+    reach_resource_distance = 1,
+    item_pickup_distance = 1,
+    loot_pickup_distance = 1,
+    ticks_to_keep_gun = 1,
+    ticks_to_keep_aiming_direction = 1,
+    ticks_to_stay_in_combat = 1,
+    ticks_to_stay_in_combat = 1,
+    damage_hit_tint = dummy_color(),
+    running_sound_animation_positions = {},
+    mining_with_tool_particles_animation_positions = {},
+    animations =
+    {
+      {
+        idle = dummy_rotated_animation(),
+        idle_with_gun = dummy_rotated_animation(),
+        running = dummy_rotated_animation(),
+        running_with_gun = (function() local a = dummy_rotated_animation(); a.direction_count = 18; return a; end)(), -- HACK
+        mining_with_tool = dummy_rotated_animation()
+      }
+    }
+  },
+  {
+    type = "character-corpse",
+    name = "dummy-character-corpse",
+    time_to_live = 1,
+    picture = dummy_animation()
+  },
+  {
+    type = "cliff",
+    name = "dummy-cliff",
+    grid_offset = dummy_vector(),
+    grid_size = dummy_vector(),
+    orientations =  {
+      west_to_east = dummy_oriented_cliff_prototype(),
+      north_to_south = dummy_oriented_cliff_prototype(),
+      east_to_west = dummy_oriented_cliff_prototype(),
+      south_to_north = dummy_oriented_cliff_prototype(),
+      west_to_north = dummy_oriented_cliff_prototype(),
+      north_to_east = dummy_oriented_cliff_prototype(),
+      east_to_south = dummy_oriented_cliff_prototype(),
+      south_to_west = dummy_oriented_cliff_prototype(),
+      west_to_south = dummy_oriented_cliff_prototype(),
+      north_to_west = dummy_oriented_cliff_prototype(),
+      east_to_north = dummy_oriented_cliff_prototype(),
+      south_to_east = dummy_oriented_cliff_prototype(),
+      west_to_none = dummy_oriented_cliff_prototype(),
+      none_to_east = dummy_oriented_cliff_prototype(),
+      north_to_none = dummy_oriented_cliff_prototype(),
+      none_to_south = dummy_oriented_cliff_prototype(),
+      east_to_none = dummy_oriented_cliff_prototype(),
+      none_to_west = dummy_oriented_cliff_prototype(),
+      south_to_none = dummy_oriented_cliff_prototype(),
+      none_to_north = dummy_oriented_cliff_prototype()
+    }
+  },
+  {
+    type = "combat-robot",
+    name = "dummy-combat-robot",
+    speed = 1,
+    attack_parameters = dummy_attack_parameters(),
+    idle = dummy_rotated_animation(),
+    in_motion = dummy_rotated_animation(),
+    shadow_idle = dummy_rotated_animation(),
+    shadow_in_motion = dummy_rotated_animation(),
+    time_to_live = 1
+  },
+  {
+    type = "constant-combinator",
+    name = "dummy-constant-combinator",
+    item_slot_count = 1,
+    sprites = dummy_sprite(),
+    activity_led_sprites = dummy_sprite(),
+    activity_led_light_offsets =
+    {
+      dummy_vector(),
+      dummy_vector(),
+      dummy_vector(),
+      dummy_vector()
+    },
+    circuit_wire_connection_points =
+    {
+      dummy_wire_connection_point(),
+      dummy_wire_connection_point(),
+      dummy_wire_connection_point(),
+      dummy_wire_connection_point()
+    }
+  },
+  {
+    type = "construction-robot",
+    name = "dummy-construction-robot",
+    speed = 1,
+    max_payload_size = 1,
+    cargo_centered = dummy_vector(),
+    construction_vector = dummy_vector()
+  },
+  {
+    type = "container",
+    name = "dummy-container",
+    inventory_size = 1,
+    picture = dummy_sprite()
+  },
+  {
+    type = "corpse",
+    name = "dummy-corpse"
+  },
 
 })
 
