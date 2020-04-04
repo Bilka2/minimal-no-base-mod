@@ -42,9 +42,7 @@ local function dummy_8_way_sprite()
   }
 end
 local function dummy_animation()
-  local sprite = dummy_sprite()
-  sprite.frame_count = 1
-  return sprite
+  return dummy_sprite()
 end
 local function dummy_rotated_animation()
   local animation = dummy_animation()
@@ -306,8 +304,8 @@ data:extend(
     {
        recipe_difficulty = defines.difficulty_settings.recipe_difficulty.normal,
        technology_difficulty = defines.difficulty_settings.technology_difficulty.normal,
-       technology_price_multiplier = 1,
-       research_queue_setting = "after-victory"
+       -- technology_price_multiplier -- not needed
+       -- research_queue_setting -- not needed
     }
   },
 
@@ -738,7 +736,12 @@ data:extend(
         idle = dummy_rotated_animation(),
         idle_with_gun = dummy_rotated_animation(),
         running = dummy_rotated_animation(),
-        running_with_gun = (function() local a = dummy_rotated_animation(); a.direction_count = 18; return a; end)(), -- HACK
+         -- HACK
+        running_with_gun = (function()
+            local a = dummy_rotated_animation()
+            a.direction_count = 18
+            return a
+          end)(),
         mining_with_tool = dummy_rotated_animation()
       }
     }
