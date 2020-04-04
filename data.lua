@@ -12,6 +12,7 @@ end
 -- common properties
 local function dummy_color() return {1, 1, 1, 1} end -- white
 local function dummy_bounding_box() return {{0, 0}, {0, 0}} end
+local function dummy_nonzero_bounding_box() return {{-0.1, -0.1}, {0.1, 0.1}} end
 local function dummy_vector() return {0, 0} end
 local function dummy_sound()
   return {filename = dummy_sound_filename}
@@ -68,6 +69,26 @@ local function dummy_rail_piece_layers()
     backplates = dummy_sprite(),
     ties = dummy_sprite(),
     stone_path = dummy_sprite()
+  }
+end
+local function dummy_rail_pictures()
+  return
+  {
+    straight_rail_horizontal = dummy_rail_piece_layers(),
+    straight_rail_vertical = dummy_rail_piece_layers(),
+    straight_rail_diagonal_left_top = dummy_rail_piece_layers(),
+    straight_rail_diagonal_right_top = dummy_rail_piece_layers(),
+    straight_rail_diagonal_right_bottom = dummy_rail_piece_layers(),
+    straight_rail_diagonal_left_bottom = dummy_rail_piece_layers(),
+    curved_rail_vertical_left_top = dummy_rail_piece_layers(),
+    curved_rail_vertical_right_top = dummy_rail_piece_layers(),
+    curved_rail_vertical_right_bottom = dummy_rail_piece_layers(),
+    curved_rail_vertical_left_bottom = dummy_rail_piece_layers(),
+    curved_rail_horizontal_left_top = dummy_rail_piece_layers(),
+    curved_rail_horizontal_right_top = dummy_rail_piece_layers(),
+    curved_rail_horizontal_right_bottom = dummy_rail_piece_layers(),
+    curved_rail_horizontal_left_bottom = dummy_rail_piece_layers(),
+    rail_endings = dummy_8_way_sprite()
   }
 end
 local function dummy_oriented_cliff_prototype()
@@ -232,7 +253,7 @@ local function add_pipe_properties(prototype)
   return prototype
 end
 local function add_transport_belt_connectable_properties(prototype)
-  prototype.collision_box = {{-0.1, -0.1}, {0.1, 0.1}}
+  prototype.collision_box = dummy_nonzero_bounding_box()
   prototype.speed = 1
   prototype.belt_animation_set =
   {
@@ -446,46 +467,12 @@ data:extend(
   { -- TODO move down to normal prototypes
     type = "straight-rail",
     name = "dummy-straight-rail",
-    pictures =
-    {
-      straight_rail_horizontal = dummy_rail_piece_layers(),
-      straight_rail_vertical = dummy_rail_piece_layers(),
-      straight_rail_diagonal_left_top = dummy_rail_piece_layers(),
-      straight_rail_diagonal_right_top = dummy_rail_piece_layers(),
-      straight_rail_diagonal_right_bottom = dummy_rail_piece_layers(),
-      straight_rail_diagonal_left_bottom = dummy_rail_piece_layers(),
-      curved_rail_vertical_left_top = dummy_rail_piece_layers(),
-      curved_rail_vertical_right_top = dummy_rail_piece_layers(),
-      curved_rail_vertical_right_bottom = dummy_rail_piece_layers(),
-      curved_rail_vertical_left_bottom = dummy_rail_piece_layers(),
-      curved_rail_horizontal_left_top = dummy_rail_piece_layers(),
-      curved_rail_horizontal_right_top = dummy_rail_piece_layers(),
-      curved_rail_horizontal_right_bottom = dummy_rail_piece_layers(),
-      curved_rail_horizontal_left_bottom = dummy_rail_piece_layers(),
-      rail_endings = dummy_8_way_sprite()
-    }
+    pictures = dummy_rail_pictures()
   },
   { -- TODO move down to normal prototypes
     type = "curved-rail",
     name = "dummy-curved-rail",
-    pictures =
-    {
-      straight_rail_horizontal = dummy_rail_piece_layers(),
-      straight_rail_vertical = dummy_rail_piece_layers(),
-      straight_rail_diagonal_left_top = dummy_rail_piece_layers(),
-      straight_rail_diagonal_right_top = dummy_rail_piece_layers(),
-      straight_rail_diagonal_right_bottom = dummy_rail_piece_layers(),
-      straight_rail_diagonal_left_bottom = dummy_rail_piece_layers(),
-      curved_rail_vertical_left_top = dummy_rail_piece_layers(),
-      curved_rail_vertical_right_top = dummy_rail_piece_layers(),
-      curved_rail_vertical_right_bottom = dummy_rail_piece_layers(),
-      curved_rail_vertical_left_bottom = dummy_rail_piece_layers(),
-      curved_rail_horizontal_left_top = dummy_rail_piece_layers(),
-      curved_rail_horizontal_right_top = dummy_rail_piece_layers(),
-      curved_rail_horizontal_right_bottom = dummy_rail_piece_layers(),
-      curved_rail_horizontal_left_bottom = dummy_rail_piece_layers(),
-      rail_endings = dummy_8_way_sprite()
-    }
+    pictures = dummy_rail_pictures()
   },
   add_dummy_icon
   { -- TODO move down to normal prototypes ?
@@ -496,6 +483,14 @@ data:extend(
     flow_color = dummy_color(),
     max_temperature = 1,
     subgroup = "other" -- not the default for an optional property!!! HACK ?
+  },
+  {
+    type = "optimized-particle",
+    name = "dummy-optimized-particle",
+    life_time = 2, -- lol
+    pictures = {dummy_animation()},
+    render_layer = dummy_render_layer,
+    render_layer_when_on_ground = dummy_render_layer
   },
 
   -- the prototypes
@@ -1205,6 +1200,222 @@ data:extend(
     {
       animation = dummy_animation()
     }
+  },
+  {
+    type = "particle",
+    name = "particle-for-migration" -- deprecated prototype
+  },
+  {
+    type = "particle-source",
+    name = "dummy-particle-source",
+    height = 1,
+    horizontal_speed = 1,
+    particle = "dummy-optimized-particle",
+    time_before_start = 1,
+    time_to_live = 1,
+    vertical_speed = 1
+  },
+  add_pipe_properties
+  {
+    type = "pipe",
+    name = "dummy-pipe"
+  },
+  {
+    type = "pipe-to-ground",
+    name = "dummy-pipe-to-ground",
+    fluid_box = dummy_fluid_box(),
+    pictures = {
+      down = dummy_sprite(),
+      up = dummy_sprite(),
+      left = dummy_sprite(),
+      right = dummy_sprite(),
+    }
+  },
+  {
+    type = "player-port",
+    name = "dummy-player-port",
+    animation = dummy_animation()
+  },
+  {
+    type = "power-switch",
+    name = "dummy-power-switch",
+    circuit_wire_connection_point = dummy_wire_connection_point(),
+    led_off = dummy_sprite(),
+    led_on = dummy_sprite(),
+    left_wire_connection_point = dummy_wire_connection_point(),
+    overlay_loop = dummy_animation(),
+    overlay_start = dummy_animation(),
+    overlay_start_delay = 1,
+    power_on_animation = dummy_animation(),
+    right_wire_connection_point = dummy_wire_connection_point()
+  },
+  {
+    type = "programmable-speaker",
+    name = "dummy-programmable-speaker",
+    energy_source = dummy_void_energy_source(),
+    energy_usage_per_tick = "1J",
+    instruments = {},
+    maximum_polyphony = 1,
+    sprite = dummy_sprite()
+  },
+  {
+    type = "projectile",
+    name = "dummy-projectile",
+    acceleration = 1,
+    animation = dummy_animation()
+  },
+  {
+    type = "pump",
+    name = "dummy-pump",
+    animations = dummy_animation(),
+    energy_source = dummy_void_energy_source(),
+    energy_usage = "1J",
+    fluid_box = dummy_fluid_box(),
+    pumping_speed = 1
+  },
+  {
+    type = "radar",
+    name = "dummy-radar",
+    energy_per_nearby_scan = "1J",
+    energy_per_sector = "1J",
+    energy_source = dummy_void_energy_source(),
+    energy_usage = "1J",
+    max_distance_of_nearby_sector_revealed = 1,
+    max_distance_of_sector_revealed = 1,
+    pictures = dummy_rotated_sprite()
+  },
+  {
+    type = "rail-chain-signal",
+    name = "dummy-rail-chain-signal",
+    animation = dummy_rotated_animation(),
+    -- HACK
+    selection_box_offsets= (function()
+        local t = {}
+        for i=1,8 do
+          t[#t+1] = dummy_vector()
+        end
+        return t
+      end)()
+  },
+  {
+    type = "rail-remnants",
+    name = "dummy-rail-remnants",
+    bending_type = "straight",
+    pictures = dummy_rail_pictures(),
+    collision_box = dummy_nonzero_bounding_box()
+  },
+  {
+    type = "rail-signal",
+    name = "dummy-rail-signal",
+    animation = dummy_rotated_animation()
+  },
+  {
+    type = "reactor",
+    name = "dummy-reactor",
+    consumption = "1J",
+    energy_source = dummy_void_energy_source(),
+    heat_buffer = dummy_heat_buffer(),
+    working_light_picture = dummy_sprite()
+  },
+  {
+    type = "resource",
+    name = "dummy-resource",
+    stage_counts = {},
+    stages = {dummy_animation()}
+  },
+  {
+    type = "roboport",
+    name = "dummy-roboport",
+    base = dummy_sprite(),
+    base_animation = dummy_animation(),
+    base_patch = dummy_sprite(),
+    charge_approach_distance = 1,
+    charging_energy = "1J",
+    construction_radius= 1,
+    door_animation_down = dummy_animation(),
+    door_animation_up = dummy_animation(),
+    energy_source = dummy_void_energy_source(),
+    energy_usage = "1J",
+    logistics_radius = 1,
+    material_slots_count = 1,
+    recharge_minimum = "1J",
+    recharging_animation = dummy_animation(),
+    request_to_open_door_timeout = 1,
+    robot_slots_count = 0, -- oh
+    spawn_and_station_height = 1
+  },
+  {
+    type = "rocket-silo",
+    name = "dummy-rocket-silo",
+    energy_usage = "1J",
+    energy_source = dummy_void_energy_source(),
+    crafting_speed = 1,
+    crafting_categories = {"crafting"},
+    active_energy_usage = "1J",
+    idle_energy_usage = "1J",
+    lamp_energy_usage = "1J",
+    rocket_entity = "dummy-rocket-silo-rocket",
+    satellite_animation = dummy_animation(),
+    satellite_shadow_animation = dummy_animation(),
+    arm_02_right_animation = dummy_animation(),
+    arm_01_back_animation = dummy_animation(),
+    arm_03_front_animation = dummy_animation(),
+    shadow_sprite = dummy_sprite(),
+    hole_sprite = dummy_sprite(),
+    hole_light_sprite = dummy_sprite(),
+    rocket_shadow_overlay_sprite = dummy_sprite(),
+    rocket_glow_overlay_sprite = dummy_sprite(),
+    door_back_sprite = dummy_sprite(),
+    door_front_sprite = dummy_sprite(),
+    base_day_sprite = dummy_sprite(),
+    base_front_sprite = dummy_sprite(),
+    red_lights_back_sprites = dummy_sprite(),
+    red_lights_front_sprites = dummy_sprite(),
+    hole_clipping_box = dummy_bounding_box(),
+    door_back_open_offset = dummy_vector(),
+    door_front_open_offset = dummy_vector(),
+    silo_fade_out_start_distance = 1,
+    silo_fade_out_end_distance = 1,
+    times_to_blink = 1,
+    light_blinking_speed = 1,
+    door_opening_speed = 1,
+    rocket_parts_required = 1
+  },
+  {
+    type = "rocket-silo-rocket",
+    name = "dummy-rocket-silo-rocket",
+    rocket_sprite = dummy_sprite(),
+    rocket_shadow_sprite = dummy_sprite(),
+    rocket_glare_overlay_sprite = dummy_sprite(),
+    rocket_smoke_bottom1_animation = dummy_animation(),
+    rocket_smoke_bottom2_animation = dummy_animation(),
+    rocket_smoke_top1_animation = dummy_animation(),
+    rocket_smoke_top2_animation = dummy_animation(),
+    rocket_smoke_top3_animation = dummy_animation(),
+    rocket_flame_animation = dummy_animation(),
+    rocket_flame_left_animation = dummy_animation(),
+    rocket_flame_right_animation = dummy_animation(),
+    rocket_rise_offset = dummy_vector(),
+    rocket_flame_left_rotation = 1,
+    rocket_flame_right_rotation = 1,
+    rocket_render_layer_switch_distance = 1,
+    full_render_layer_switch_distance = 1,
+    full_render_layer_switch_distance = 1,
+    rocket_launch_offset = dummy_vector(),
+    effects_fade_in_start_distance = 1,
+    effects_fade_in_end_distance = 1,
+    shadow_fade_out_start_ratio = 1,
+    shadow_fade_out_end_ratio = 1,
+    rocket_visible_distance_from_center = 1,
+    rising_speed = 1,
+    engine_starting_speed = 1,
+    flying_speed = 1,
+    flying_acceleration = 1,
+    inventory_size = 1
+  },
+  {
+    type = "rocket-silo-rocket-shadow",
+    name = "dummy-rocket-silo-rocket-shadow"
   }
 
 })
