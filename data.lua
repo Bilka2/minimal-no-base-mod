@@ -14,7 +14,7 @@ local function dummy_color() return {1, 1, 1, 1} end -- white
 local function dummy_bounding_box() return {{0, 0}, {0, 0}} end
 local function dummy_vector() return {0, 0} end
 local function dummy_sound()
-  return { filename = dummy_sound_filename }
+  return {filename = dummy_sound_filename}
 end
 local function dummy_sprite()
   return
@@ -74,24 +74,24 @@ local function dummy_oriented_cliff_prototype()
   return
   {
     collision_bounding_box = dummy_bounding_box(),
-    pictures = { dummy_sprite() },
+    pictures = {dummy_sprite()},
     fill_volume = 1
   }
 end
 local function dummy_electric_input_energy_source()
   return
-    {
-      type = "electric",
-      buffer_capacity = "1J",
-      input_flow_limit = "1W",
-      usage_priority = "primary-input"
-    }
+  {
+    type = "electric",
+    buffer_capacity = "1J",
+    input_flow_limit = "1W",
+    usage_priority = "primary-input"
+  }
 end
 local function dummy_void_energy_source()
-  return { type = "void" }
+  return {type = "void"}
 end
 local function dummy_burner_energy_source()
-  return { type = "burner", fuel_inventory_size = 1}
+  return {type = "burner", fuel_inventory_size = 1}
 end
 local function dummy_wire_connection_point()
   return
@@ -102,6 +102,17 @@ local function dummy_wire_connection_point()
 end
 local function dummy_damage_prototype()
   return {amount = 1, type = "physical"}
+end
+local function dummy_fluid_box()
+  return {pipe_connections = {}}
+end
+local function dummy_heat_buffer()
+  return
+  {
+    max_temperature = 15, -- because default defaults to 15 and this must be >= default
+    specific_heat = "1J",
+    max_transfer = "1J"
+  }
 end
 
 -- common base prototypes
@@ -184,6 +195,40 @@ local function add_rolling_stock_properties(prototype)
   prototype.max_speed = 1
   prototype.pictures = dummy_rotated_sprite()
   prototype.vertical_selection_shift = 1
+  return prototype
+end
+local function add_pipe_properties(prototype)
+  prototype.horizontal_window_bounding_box = dummy_bounding_box()
+  prototype.vertical_window_bounding_box = dummy_bounding_box()
+  prototype.fluid_box = dummy_fluid_box()
+  prototype.pictures =
+  {
+    straight_vertical_single = dummy_sprite(),
+    straight_vertical = dummy_sprite(),
+    straight_vertical_window = dummy_sprite(),
+    straight_horizontal = dummy_sprite(),
+    straight_horizontal_window = dummy_sprite(),
+    corner_up_right = dummy_sprite(),
+    corner_up_left = dummy_sprite(),
+    corner_down_right = dummy_sprite(),
+    corner_down_left = dummy_sprite(),
+    t_up = dummy_sprite(),
+    t_down = dummy_sprite(),
+    t_right = dummy_sprite(),
+    t_left = dummy_sprite(),
+    cross = dummy_sprite(),
+    ending_up = dummy_sprite(),
+    ending_down = dummy_sprite(),
+    ending_right = dummy_sprite(),
+    ending_left = dummy_sprite(),
+    horizontal_window_background = dummy_sprite(),
+    vertical_window_background = dummy_sprite(),
+    fluid_background = dummy_sprite(),
+    low_temperature_flow = dummy_sprite(),
+    middle_temperature_flow = dummy_sprite(),
+    high_temperature_flow = dummy_sprite(),
+    gas_flow = dummy_animation()
+  }
   return prototype
 end
 
@@ -662,26 +707,8 @@ data:extend(
     burning_cooldown = 1,
     energy_consumption = "1J",
     energy_source = dummy_void_energy_source(),
-
-    -- copied from vanilla because these values are finicky
-    collision_box = {{-1.29, -0.79}, {1.29, 0.79}},
-    fluid_box = {
-      pipe_connections =
-      {
-        {
-          position = {-2, 0.5}
-        }
-      }
-    },
-    output_fluid_box = {
-      pipe_connections =
-      {
-        {
-          position = {0, -1.5}
-        }
-      }
-    },
-
+    fluid_box = dummy_fluid_box(),
+    output_fluid_box = dummy_fluid_box(),
     target_temperature = 1,
     structure =
     {
@@ -913,7 +940,7 @@ data:extend(
     type = "fluid-turret",
     name = "dummy-fluid-turret",
     activation_buffer_ratio = 1,
-    fluid_box = { pipe_connections = {}},
+    fluid_box = dummy_fluid_box(),
     fluid_buffer_input_flow = 1,
     fluid_buffer_size = 1,
     turret_base_has_direction = true
@@ -939,7 +966,126 @@ data:extend(
     crafting_categories = {"crafting"},
     result_inventory_size = 1,
     source_inventory_size = 1
-  }
+  },
+  {
+    type = "gate",
+    name = "dummy-gate",
+    activation_distance = 1,
+    close_sound = dummy_sound(),
+    open_sound = dummy_sound(),
+    horizontal_animation = dummy_animation(),
+    horizontal_rail_animation_left = dummy_animation(),
+    horizontal_rail_animation_right = dummy_animation(),
+    horizontal_rail_base = dummy_animation(),
+    opening_speed = 1,
+    timeout_to_close = 1,
+    vertical_animation = dummy_animation(),
+    vertical_rail_animation_left = dummy_animation(),
+    vertical_rail_animation_right = dummy_animation(),
+    vertical_rail_base = dummy_animation(),
+    wall_patch = dummy_animation()
+  },
+  {
+    type = "generator",
+    name = "dummy-generator",
+    effectivity = 1,
+    energy_source = dummy_electric_input_energy_source(), -- HACK
+    fluid_box = dummy_fluid_box(),
+    fluid_usage_per_tick = 1,
+    horizontal_animation = dummy_animation(),
+    maximum_temperature = 1,
+    vertical_animation = dummy_animation(),
+  },
+  {
+    type = "heat-interface",
+    name = "dummy-heat-interface",
+    heat_buffer = dummy_heat_buffer()
+  },
+  {
+    type = "heat-pipe",
+    name = "dummy-heat-pipe",
+    heat_buffer = dummy_heat_buffer(),
+    connection_sprites =
+    {
+      single = {dummy_sprite()},
+      straight_vertical = {dummy_sprite()},
+      straight_horizontal = {dummy_sprite()},
+      corner_right_down = {dummy_sprite()},
+      corner_left_down = {dummy_sprite()},
+      corner_right_up = {dummy_sprite()},
+      corner_left_up = {dummy_sprite()},
+      t_up = {dummy_sprite()},
+      t_right = {dummy_sprite()},
+      t_down = {dummy_sprite()},
+      t_left = {dummy_sprite()},
+      ending_up = {dummy_sprite()},
+      ending_right = {dummy_sprite()},
+      ending_down = {dummy_sprite()},
+      ending_left = {dummy_sprite()},
+      cross = {dummy_sprite()}
+    },
+    heat_glow_sprites =
+    {
+      single = {dummy_sprite()},
+      straight_vertical = {dummy_sprite()},
+      straight_horizontal = {dummy_sprite()},
+      corner_right_down = {dummy_sprite()},
+      corner_left_down = {dummy_sprite()},
+      corner_right_up = {dummy_sprite()},
+      corner_left_up = {dummy_sprite()},
+      t_up = {dummy_sprite()},
+      t_right = {dummy_sprite()},
+      t_down = {dummy_sprite()},
+      t_left = {dummy_sprite()},
+      ending_up = {dummy_sprite()},
+      ending_right = {dummy_sprite()},
+      ending_down = {dummy_sprite()},
+      ending_left = {dummy_sprite()},
+      cross = {dummy_sprite()}
+    }
+  },
+  {
+    type = "highlight-box",
+    name = "dummy-highlight-box"
+  },
+  {
+    type = "infinity-container",
+    name = "dummy-infinity-container",
+    inventory_size = 1,
+    picture = dummy_sprite(),
+    erase_contents_when_mined = true
+  },
+  add_pipe_properties
+  {
+    type = "infinity-pipe",
+    name = "dummy-infinity-pipe"
+  },
+  {
+    type = "inserter",
+    name = "dummy-inserter",
+    energy_source = dummy_electric_input_energy_source(),
+    extension_speed = 1,
+    hand_base_picture = dummy_sprite(),
+    hand_base_shadow = dummy_sprite(),
+    hand_closed_picture = dummy_sprite(),
+    hand_closed_shadow = dummy_sprite(),
+    hand_open_picture = dummy_sprite(),
+    hand_open_shadow = dummy_sprite(),
+    insert_position = dummy_vector(),
+    pickup_position = dummy_vector(),
+    platform_picture = dummy_sprite(),
+    rotation_speed = 1
+  },
+  {
+    type = "item-entity",
+    name = "item-on-ground" -- also a core prototype
+  },
+  {
+    type = "item-request-proxy",
+    name = "item-request-proxy", -- also a core prototype
+    picture = dummy_sprite()
+  },
+
 
 })
 
