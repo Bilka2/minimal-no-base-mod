@@ -231,6 +231,20 @@ local function add_pipe_properties(prototype)
   }
   return prototype
 end
+local function add_transport_belt_connectable_properties(prototype)
+  prototype.collision_box = {{-0.1, -0.1}, {0.1, 0.1}}
+  prototype.speed = 1
+  prototype.belt_animation_set =
+  {
+    -- HACK
+    animation_set = (function()
+        local a = dummy_rotated_animation()
+        a.direction_count = 20
+        return a
+      end)()
+  }
+  return prototype
+end
 
 data:extend(
 {
@@ -429,8 +443,7 @@ data:extend(
     type = "damage-type",
     name = "physical" -- also a core prototype
   },
-  add_dummy_icon -- TODO move down to normal prototypes
-  {
+  { -- TODO move down to normal prototypes
     type = "straight-rail",
     name = "dummy-straight-rail",
     pictures =
@@ -452,8 +465,7 @@ data:extend(
       rail_endings = dummy_8_way_sprite()
     }
   },
-  add_dummy_icon -- TODO move down to normal prototypes
-  {
+  { -- TODO move down to normal prototypes
     type = "curved-rail",
     name = "dummy-curved-rail",
     pictures =
@@ -474,6 +486,16 @@ data:extend(
       curved_rail_horizontal_left_bottom = dummy_rail_piece_layers(),
       rail_endings = dummy_8_way_sprite()
     }
+  },
+  add_dummy_icon
+  { -- TODO move down to normal prototypes ?
+    type = "fluid",
+    name = "dummy-fluid",
+    base_color = dummy_color(),
+    default_temperature = 1,
+    flow_color = dummy_color(),
+    max_temperature = 1,
+    subgroup = "other" -- not the default for an optional property!!! HACK ?
   },
 
   -- the prototypes
@@ -558,8 +580,8 @@ data:extend(
   },
   add_item_properties
   {
-    type = "mining-tool", -- deprecated prototype
-    name = "dummy-mining-tool",
+    type = "mining-tool",
+    name = "dummy-mining-tool", -- deprecated prototype
     infinite = true
   },
   add_item_properties
@@ -885,7 +907,7 @@ data:extend(
   },
   {
     type = "decorative",
-    name = "dummy-decorative"
+    name = "dummy-decorative" -- deprecated prototype
   },
   {
     type = "electric-energy-interface",
@@ -905,7 +927,7 @@ data:extend(
   {
     type = "electric-turret",
     name = "dummy-electric-turret",
-    energy_source = dummy_electric_input_energy_source()
+    energy_source = dummy_void_energy_source()
   },
   {
     type = "entity-ghost",
@@ -1063,7 +1085,7 @@ data:extend(
   {
     type = "inserter",
     name = "dummy-inserter",
-    energy_source = dummy_electric_input_energy_source(),
+    energy_source = dummy_void_energy_source(),
     extension_speed = 1,
     hand_base_picture = dummy_sprite(),
     hand_base_shadow = dummy_sprite(),
@@ -1085,7 +1107,105 @@ data:extend(
     name = "item-request-proxy", -- also a core prototype
     picture = dummy_sprite()
   },
-
+  {
+    type = "lab",
+    name = "dummy-lab",
+    energy_source = dummy_void_energy_source(),
+    energy_usage = "1J",
+    inputs = {},
+    off_animation = dummy_animation(),
+    on_animation = dummy_animation()
+  },
+  {
+    type = "lamp",
+    name = "dummy-lamp",
+    energy_source = dummy_void_energy_source(),
+    energy_usage_per_tick = "1J",
+    picture_off = dummy_sprite(),
+    picture_on = dummy_sprite()
+  },
+  {
+    type = "land-mine",
+    name = "dummy-land-mine",
+    picture_safe = dummy_sprite(),
+    picture_set = dummy_sprite(),
+    trigger_radius = 1
+  },
+  {
+    type = "leaf-particle",
+    name = "leaf-particle-for-migration" -- deprecated prototype
+  },
+  add_transport_belt_connectable_properties
+  {
+    type = "loader",
+    name = "dummy-loader",
+    filter_count = 1,
+    structure =
+    {
+      direction_in = dummy_sprite(),
+      direction_out  = dummy_sprite()
+    }
+  },
+  add_transport_belt_connectable_properties
+  {
+    type = "loader-1x1",
+    name = "dummy-loader-1x1",
+    filter_count = 1,
+    structure =
+    {
+      direction_in = dummy_sprite(),
+      direction_out  = dummy_sprite()
+    }
+  },
+  add_rolling_stock_properties
+  {
+    type = "locomotive",
+    name = "dummy-locomotive",
+    energy_source = dummy_void_energy_source(),
+    max_power = "1J",
+    reversing_power_modifier = 1
+  },
+  {
+    type = "logistic-container",
+    name = "dummy-logistic-container",
+    inventory_size = 1,
+    picture = dummy_sprite(),
+    logistic_mode = "active-provider"
+  },
+  {
+    type = "logistic-robot",
+    name = "dummy-logistic-robot",
+    speed = 1,
+    max_payload_size = 1,
+    cargo_centered = dummy_vector()
+  },
+  {
+    type = "market",
+    name = "dummy-market",
+    picture = dummy_sprite()
+  },
+  {
+    type = "mining-drill",
+    name = "dummy-mining-drill",
+    animations = dummy_animation(),
+    energy_source = dummy_void_energy_source(),
+    energy_usage = "1J",
+    mining_speed = 1,
+    resource_categories = {"basic-solid"},
+    resource_searching_radius = 1,
+    vector_to_place_result = dummy_vector()
+  },
+  {
+    type = "offshore-pump",
+    name = "dummy-offshore-pump",
+    fluid = "dummy-fluid",
+    fluid_box = dummy_fluid_box(),
+    pumping_speed = 1,
+    graphics_set =
+    {
+      animation = dummy_animation()
+    }
+  }
 
 })
 
