@@ -52,7 +52,7 @@ end
 local function dummy_attack_parameters()
   return
   {
-    type = "beam",
+    type = "stream", -- useful for fluid turret
     ammo_type = -- may be redundant -- TODO Bilka: Check if this is actually the case
     {
       category = "dummy-ammo-category"
@@ -100,6 +100,9 @@ local function dummy_wire_connection_point()
     shadow = {}
   }
 end
+local function dummy_damage_prototype()
+  return {amount = 1, type = "physical"}
+end
 
 -- common base prototypes
 -- items
@@ -119,6 +122,12 @@ local function add_selection_tool_properties(prototype)
   return prototype
 end
 -- entities
+local function add_turret_properties(prototype)
+  prototype.call_for_help_radius = 1
+  prototype.attack_parameters = dummy_attack_parameters()
+  prototype.folded_animation = dummy_rotated_animation()
+  return prototype
+end
 local function add_combinator_properties(prototype)
   prototype.energy_source = dummy_void_energy_source()
   prototype.active_energy_usage = "1J"
@@ -371,6 +380,10 @@ data:extend(
     type = "module-category",
     name = "dummy-module-category"
   },
+  {
+    type = "damage-type",
+    name = "physical" -- also a core prototype
+  },
   add_dummy_icon -- TODO move down to normal prototypes
   {
     type = "straight-rail",
@@ -551,12 +564,10 @@ data:extend(
     charge_cooldown = 1,
     discharge_cooldown = 1
   },
+  add_turret_properties
   {
     type = "ammo-turret",
     name = "dummy-ammo-turret",
-    call_for_help_radius = 1,
-    attack_parameters = dummy_attack_parameters(),
-    folded_animation = dummy_rotated_animation(),
     automated_ammo_count = 1,
     inventory_size = 1
   },
@@ -830,6 +841,105 @@ data:extend(
     type = "corpse",
     name = "dummy-corpse"
   },
+  add_combinator_properties
+  {
+    type = "decider-combinator",
+    name = "dummy-decider-combinator",
+    equal_symbol_sprites = dummy_sprite(),
+    greater_or_equal_symbol_sprites = dummy_sprite(),
+    greater_symbol_sprites = dummy_sprite(),
+    less_or_equal_symbol_sprites = dummy_sprite(),
+    less_symbol_sprites = dummy_sprite(),
+    not_equal_symbol_sprites = dummy_sprite()
+  },
+  {
+    type = "deconstructible-tile-proxy",
+    name = "deconstructible-tile-proxy" -- also a core prototype
+  },
+  {
+    type = "decorative",
+    name = "dummy-decorative"
+  },
+  {
+    type = "electric-energy-interface",
+    name = "dummy-electric-energy-interface",
+    energy_source = dummy_electric_input_energy_source() -- HACK ?
+  },
+  {
+    type = "electric-pole",
+    name = "dummy-electric-pole",
+    connection_points = {
+      dummy_wire_connection_point()
+    },
+    pictures = dummy_rotated_sprite(),
+    supply_area_distance = 1
+  },
+  add_turret_properties
+  {
+    type = "electric-turret",
+    name = "dummy-electric-turret",
+    energy_source = dummy_electric_input_energy_source()
+  },
+  {
+    type = "entity-ghost",
+    name = "dummy-entity-ghost"
+  },
+  {
+    type = "explosion",
+    name = "dummy-explosion",
+    animations = {dummy_animation()}
+  },
+  {
+    type = "fire",
+    name = "dummy-fire",
+    damage_per_tick = dummy_damage_prototype(),
+    spread_delay = 1,
+    spread_delay_deviation = 1
+  },
+  {
+    type = "fish",
+    name = "dummy-fish",
+    pictures = {dummy_sprite()}
+  },
+  {
+    type = "flame-thrower-explosion",
+    name = "dummy-flame-thrower-explosion",
+    animations = {dummy_animation()},
+    damage = dummy_damage_prototype(),
+    slow_down_factor = 1
+  },
+  add_turret_properties
+  {
+    type = "fluid-turret",
+    name = "dummy-fluid-turret",
+    activation_buffer_ratio = 1,
+    fluid_box = { pipe_connections = {}},
+    fluid_buffer_input_flow = 1,
+    fluid_buffer_size = 1,
+    turret_base_has_direction = true
+  },
+  add_rolling_stock_properties
+  {
+    type = "fluid-wagon",
+    name = "dummy-fluid-wagon",
+    capacity = 1
+  },
+  {
+    type = "flying-text",
+    name = "flying-text", -- also a core prototype
+    speed = 1,
+    time_to_live = 1
+  },
+  {
+    type = "furnace",
+    name = "dummy-furnace",
+    energy_usage = "1J",
+    energy_source = dummy_void_energy_source(),
+    crafting_speed = 1,
+    crafting_categories = {"crafting"},
+    result_inventory_size = 1,
+    source_inventory_size = 1
+  }
 
 })
 
