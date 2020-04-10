@@ -267,6 +267,19 @@ local function add_transport_belt_connectable_properties(prototype)
   }
   return prototype
 end
+-- equipment
+local function add_equipment_properties(prototype)
+  prototype.sprite = dummy_sprite()
+  prototype.shape = {
+    type = "full",
+    width = 1,
+    height = 1
+  }
+  prototype.categories = {"dummy-equipment-category"}
+  prototype.energy_source = dummy_electric_input_energy_source()
+  prototype.take_result = "dummy-item"
+  return prototype
+end
 
 data:extend(
 {
@@ -441,22 +454,6 @@ data:extend(
     type = "equipment-category",
     name = "dummy-equipment-category"
   },
-  { -- TODO move down to normal prototypes ?
-    type = "active-defense-equipment",
-    name = "dummy-active-defense-equipment",
-    sprite = dummy_sprite(),
-    shape = {
-      type = "full",
-      width = 1,
-      height = 1
-    },
-    energy_source = dummy_electric_input_energy_source(),
-    categories = {"dummy-equipment-category"},
-    automatic = false,
-    ability_icon = dummy_sprite(),
-    attack_parameters = dummy_attack_parameters(),
-    take_result = "dummy-item"
-  },
   {
     type = "module-category",
     name = "dummy-module-category"
@@ -464,16 +461,6 @@ data:extend(
   {
     type = "damage-type",
     name = "physical" -- also a core prototype
-  },
-  { -- TODO move down to normal prototypes
-    type = "straight-rail",
-    name = "dummy-straight-rail",
-    pictures = dummy_rail_pictures()
-  },
-  { -- TODO move down to normal prototypes
-    type = "curved-rail",
-    name = "dummy-curved-rail",
-    pictures = dummy_rail_pictures()
   },
   add_dummy_icon
   { -- TODO move down to normal prototypes / core prototypes ?
@@ -885,6 +872,11 @@ data:extend(
   {
     type = "corpse",
     name = "dummy-corpse"
+  },
+  {
+    type = "curved-rail",
+    name = "dummy-curved-rail",
+    pictures = dummy_rail_pictures()
   },
   add_combinator_properties
   {
@@ -1332,7 +1324,7 @@ data:extend(
     base_patch = dummy_sprite(),
     charge_approach_distance = 1,
     charging_energy = "1J",
-    construction_radius= 1,
+    construction_radius = 1,
     door_animation_down = dummy_animation(),
     door_animation_up = dummy_animation(),
     energy_source = dummy_void_energy_source(),
@@ -1488,6 +1480,11 @@ data:extend(
     window_bounding_box = dummy_bounding_box()
   },
   {
+    type = "straight-rail",
+    name = "dummy-straight-rail",
+    pictures = dummy_rail_pictures()
+  },
+  {
     type = "stream",
     name = "dummy-stream",
     particle_horizontal_speed = 1,
@@ -1610,6 +1607,69 @@ data:extend(
       ending_right = dummy_sprite(),
       ending_left = dummy_sprite()
     }
+  },
+  -- equipment
+  add_equipment_properties
+  {
+    type = "active-defense-equipment",
+    name = "dummy-active-defense-equipment",
+    automatic = false,
+    ability_icon = dummy_sprite(),
+    attack_parameters = dummy_attack_parameters()
+  },
+  add_equipment_properties
+  {
+    type = "battery-equipment",
+    name = "dummy-battery-equipment"
+  },
+  add_equipment_properties
+  {
+    type = "belt-immunity-equipment",
+    name = "dummy-belt-immunity-equipment",
+    energy_consumption = "1J"
+  },
+  add_equipment_properties
+  {
+    type = "energy-shield-equipment",
+    name = "dummy-energy-shield-equipment",
+    energy_per_shield = "1J",
+    max_shield_value = 1
+  },
+  add_equipment_properties
+  {
+    type = "generator-equipment",
+    name = "dummy-generator-equipment",
+    power = "1J"
+  },
+  add_equipment_properties
+  {
+    type = "movement-bonus-equipment",
+    name = "dummy-movement-bonus-equipment",
+    energy_consumption = "1J",
+    movement_bonus = 1
+  },
+  add_equipment_properties
+  {
+    type = "night-vision-equipment",
+    name = "dummy-night-vision-equipment",
+    energy_input = "1J",
+    color_lookup = {{1, "identity"}}
+  },
+  add_equipment_properties
+  {
+    type = "roboport-equipment",
+    name = "dummy-roboport-equipment",
+    charge_approach_distance = 1,
+    charging_energy = "1J",
+    construction_radius = 1,
+    recharging_animation = dummy_animation(),
+    spawn_and_station_height = 1
+  },
+  add_equipment_properties
+  {
+    type = "solar-panel-equipment",
+    name = "dummy-solar-panel-equipment",
+    power = "1J"
   }
 
 })
