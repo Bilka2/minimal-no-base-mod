@@ -1,148 +1,10 @@
-local dummy_sound_filename = "__core__/sound/achievement-unlocked.ogg"
-local dummy_sprite_filename = "__core__/graphics/empty.png"
-local dummy_32px_sprite_filename = "__core__/graphics/bonus-icon.png"
-local dummy_render_layer = "object"
+local properties = require("properties")
 
 -- TODO Bilka: idk where to put this
 local function add_dummy_icon(prototype)
-  prototype.icon = dummy_sprite_filename
+  prototype.icon = properties.sprite_filename
   prototype.icon_size = 1
   return prototype
-end
-
--- common properties
-local function dummy_color() return {1, 1, 1, 1} end -- white
-local function dummy_bounding_box() return {{0, 0}, {0, 0}} end
-local function dummy_nonzero_bounding_box() return {{-1.0, -0.5}, {0.1, 0.1}} end -- splitter: bounding box width must be > 0.5, height must be > 1
-local function dummy_vector() return {0, 0} end
-local function dummy_sound()
-  return {filename = dummy_sound_filename}
-end
-local function dummy_sprite()
-  return
-  {
-    filename = dummy_sprite_filename,
-    size = 1
-  }
-end
-local function dummy_rotated_sprite()
-  local sprite = dummy_sprite()
-  sprite.direction_count = 1
-  return sprite
-end
-local function dummy_rotated_sprite_custom_direction_count(direction_count)
-  -- HACK
-  local sprite = dummy_sprite()
-  sprite.filename = dummy_32px_sprite_filename
-  sprite.direction_count = direction_count
-  return sprite
-end
-local function dummy_8_way_sprite()
-  return
-  {
-    north = dummy_sprite(),
-    north_east = dummy_sprite(),
-    east = dummy_sprite(),
-    south_east = dummy_sprite(),
-    south = dummy_sprite(),
-    south_west = dummy_sprite(),
-    west = dummy_sprite(),
-    north_west = dummy_sprite()
-  }
-end
-local function dummy_animation()
-  return dummy_sprite()
-end
-local function dummy_rotated_animation()
-  local animation = dummy_animation()
-  animation.direction_count = 1
-  return animation
-end
-local function dummy_attack_parameters()
-  return
-  {
-    type = "stream", -- required by fluid turret
-    ammo_type = -- may be redundant -- TODO Bilka: Check if this is actually the case
-    {
-      category = "dummy-ammo-category"
-    },
-    range = 1,
-    cooldown = 1,
-    animation = dummy_rotated_animation() -- required by unit
-  }
-end
-local function dummy_rail_piece_layers()
-  return
-  {
-    metals = dummy_sprite(),
-    backplates = dummy_sprite(),
-    ties = dummy_sprite(),
-    stone_path = dummy_sprite()
-  }
-end
-local function dummy_rail_pictures()
-  return
-  {
-    straight_rail_horizontal = dummy_rail_piece_layers(),
-    straight_rail_vertical = dummy_rail_piece_layers(),
-    straight_rail_diagonal_left_top = dummy_rail_piece_layers(),
-    straight_rail_diagonal_right_top = dummy_rail_piece_layers(),
-    straight_rail_diagonal_right_bottom = dummy_rail_piece_layers(),
-    straight_rail_diagonal_left_bottom = dummy_rail_piece_layers(),
-    curved_rail_vertical_left_top = dummy_rail_piece_layers(),
-    curved_rail_vertical_right_top = dummy_rail_piece_layers(),
-    curved_rail_vertical_right_bottom = dummy_rail_piece_layers(),
-    curved_rail_vertical_left_bottom = dummy_rail_piece_layers(),
-    curved_rail_horizontal_left_top = dummy_rail_piece_layers(),
-    curved_rail_horizontal_right_top = dummy_rail_piece_layers(),
-    curved_rail_horizontal_right_bottom = dummy_rail_piece_layers(),
-    curved_rail_horizontal_left_bottom = dummy_rail_piece_layers(),
-    rail_endings = dummy_8_way_sprite()
-  }
-end
-local function dummy_oriented_cliff_prototype()
-  return
-  {
-    collision_bounding_box = dummy_bounding_box(),
-    pictures = {dummy_sprite()},
-    fill_volume = 1
-  }
-end
-local function dummy_electric_input_energy_source()
-  return
-  {
-    type = "electric",
-    buffer_capacity = "1J",
-    input_flow_limit = "1W",
-    usage_priority = "primary-input"
-  }
-end
-local function dummy_void_energy_source()
-  return {type = "void"}
-end
-local function dummy_burner_energy_source()
-  return {type = "burner", fuel_inventory_size = 1}
-end
-local function dummy_wire_connection_point()
-  return
-  {
-    wire = {},
-    shadow = {}
-  }
-end
-local function dummy_damage_prototype()
-  return {amount = 1, type = "physical"}
-end
-local function dummy_fluid_box()
-  return {pipe_connections = {}}
-end
-local function dummy_heat_buffer()
-  return
-  {
-    max_temperature = 15, -- because default defaults to 15 and this must be >= default
-    specific_heat = "1J",
-    max_transfer = "1J"
-  }
 end
 
 -- common base prototypes
@@ -154,8 +16,8 @@ local function add_item_properties(prototype)
 end
 local function add_selection_tool_properties(prototype)
   prototype = add_item_properties(prototype)
-  prototype.selection_color = dummy_color()
-  prototype.alt_selection_color = dummy_color()
+  prototype.selection_color = properties.color()
+  prototype.alt_selection_color = properties.color()
   prototype.selection_mode = "nothing"
   prototype.alt_selection_mode = "nothing"
   prototype.selection_cursor_box_type = "entity"
@@ -165,44 +27,44 @@ end
 -- entities
 local function add_turret_properties(prototype)
   prototype.call_for_help_radius = 1
-  prototype.attack_parameters = dummy_attack_parameters()
-  prototype.folded_animation = dummy_rotated_animation()
+  prototype.attack_parameters = properties.attack_parameters()
+  prototype.folded_animation = properties.rotated_animation()
   return prototype
 end
 local function add_combinator_properties(prototype)
-  prototype.energy_source = dummy_void_energy_source()
+  prototype.energy_source = properties.void_energy_source()
   prototype.active_energy_usage = "1J"
-  prototype.sprites = dummy_sprite()
-  prototype.activity_led_sprites = dummy_sprite()
-  prototype.input_connection_bounding_box = dummy_bounding_box()
-  prototype.output_connection_bounding_box = dummy_bounding_box()
+  prototype.sprites = properties.sprite()
+  prototype.activity_led_sprites = properties.sprite()
+  prototype.input_connection_bounding_box = properties.bounding_box()
+  prototype.output_connection_bounding_box = properties.bounding_box()
   prototype.activity_led_light_offsets =
   {
-    dummy_vector(),
-    dummy_vector(),
-    dummy_vector(),
-    dummy_vector()
+    properties.vector(),
+    properties.vector(),
+    properties.vector(),
+    properties.vector()
   }
   prototype.screen_light_offsets =
   {
-    dummy_vector(),
-    dummy_vector(),
-    dummy_vector(),
-    dummy_vector()
+    properties.vector(),
+    properties.vector(),
+    properties.vector(),
+    properties.vector()
   }
   prototype.input_connection_points =
   {
-    dummy_wire_connection_point(),
-    dummy_wire_connection_point(),
-    dummy_wire_connection_point(),
-    dummy_wire_connection_point()
+    properties.wire_connection_point(),
+    properties.wire_connection_point(),
+    properties.wire_connection_point(),
+    properties.wire_connection_point()
   }
   prototype.output_connection_points =
   {
-    dummy_wire_connection_point(),
-    dummy_wire_connection_point(),
-    dummy_wire_connection_point(),
-    dummy_wire_connection_point()
+    properties.wire_connection_point(),
+    properties.wire_connection_point(),
+    properties.wire_connection_point(),
+    properties.wire_connection_point()
   }
   return prototype
 end
@@ -223,63 +85,63 @@ local function add_rolling_stock_properties(prototype)
   prototype.joint_distance = 4
 
   prototype.max_speed = 1
-  prototype.pictures = dummy_rotated_sprite()
+  prototype.pictures = properties.rotated_sprite()
   prototype.vertical_selection_shift = 1
   return prototype
 end
 local function add_pipe_properties(prototype)
-  prototype.horizontal_window_bounding_box = dummy_bounding_box()
-  prototype.vertical_window_bounding_box = dummy_bounding_box()
-  prototype.fluid_box = dummy_fluid_box()
+  prototype.horizontal_window_bounding_box = properties.bounding_box()
+  prototype.vertical_window_bounding_box = properties.bounding_box()
+  prototype.fluid_box = properties.fluid_box()
   prototype.pictures =
   {
-    straight_vertical_single = dummy_sprite(),
-    straight_vertical = dummy_sprite(),
-    straight_vertical_window = dummy_sprite(),
-    straight_horizontal = dummy_sprite(),
-    straight_horizontal_window = dummy_sprite(),
-    corner_up_right = dummy_sprite(),
-    corner_up_left = dummy_sprite(),
-    corner_down_right = dummy_sprite(),
-    corner_down_left = dummy_sprite(),
-    t_up = dummy_sprite(),
-    t_down = dummy_sprite(),
-    t_right = dummy_sprite(),
-    t_left = dummy_sprite(),
-    cross = dummy_sprite(),
-    ending_up = dummy_sprite(),
-    ending_down = dummy_sprite(),
-    ending_right = dummy_sprite(),
-    ending_left = dummy_sprite(),
-    horizontal_window_background = dummy_sprite(),
-    vertical_window_background = dummy_sprite(),
-    fluid_background = dummy_sprite(),
-    low_temperature_flow = dummy_sprite(),
-    middle_temperature_flow = dummy_sprite(),
-    high_temperature_flow = dummy_sprite(),
-    gas_flow = dummy_animation()
+    straight_vertical_single = properties.sprite(),
+    straight_vertical = properties.sprite(),
+    straight_vertical_window = properties.sprite(),
+    straight_horizontal = properties.sprite(),
+    straight_horizontal_window = properties.sprite(),
+    corner_up_right = properties.sprite(),
+    corner_up_left = properties.sprite(),
+    corner_down_right = properties.sprite(),
+    corner_down_left = properties.sprite(),
+    t_up = properties.sprite(),
+    t_down = properties.sprite(),
+    t_right = properties.sprite(),
+    t_left = properties.sprite(),
+    cross = properties.sprite(),
+    ending_up = properties.sprite(),
+    ending_down = properties.sprite(),
+    ending_right = properties.sprite(),
+    ending_left = properties.sprite(),
+    horizontal_window_background = properties.sprite(),
+    vertical_window_background = properties.sprite(),
+    fluid_background = properties.sprite(),
+    low_temperature_flow = properties.sprite(),
+    middle_temperature_flow = properties.sprite(),
+    high_temperature_flow = properties.sprite(),
+    gas_flow = properties.animation()
   }
   return prototype
 end
 local function add_transport_belt_connectable_properties(prototype)
-  prototype.collision_box = dummy_nonzero_bounding_box()
+  prototype.collision_box = properties.nonzero_bounding_box()
   prototype.speed = 1
   prototype.belt_animation_set =
   {
-    animation_set = dummy_rotated_sprite_custom_direction_count(20)
+    animation_set = properties.rotated_sprite_custom_direction_count(20)
   }
   return prototype
 end
 -- equipment
 local function add_equipment_properties(prototype)
-  prototype.sprite = dummy_sprite()
+  prototype.sprite = properties.sprite()
   prototype.shape = {
     type = "full",
     width = 1,
     height = 1
   }
   prototype.categories = {"dummy-equipment-category"}
-  prototype.energy_source = dummy_electric_input_energy_source()
+  prototype.energy_source = properties.electric_energy_source()
   prototype.take_result = "dummy-item"
   return prototype
 end
@@ -469,9 +331,9 @@ data:extend(
   {
     type = "fluid",
     name = "water", -- also a core prototype
-    base_color = dummy_color(),
+    base_color = properties.color(),
     default_temperature = 1,
-    flow_color = dummy_color(),
+    flow_color = properties.color(),
     max_temperature = 1,
     subgroup = "other"
   },
@@ -479,9 +341,9 @@ data:extend(
     type = "optimized-particle",
     name = "dummy-optimized-particle",
     life_time = 2, -- workaround (1 errors)
-    pictures = dummy_animation(),
-    render_layer = dummy_render_layer,
-    render_layer_when_on_ground = dummy_render_layer
+    pictures = properties.animation(),
+    render_layer = properties.render_layer,
+    render_layer_when_on_ground = properties.render_layer
   },
 
   -- the prototypes
@@ -536,7 +398,7 @@ data:extend(
   {
     type = "gun",
     name = "dummy-gun",
-    attack_parameters = dummy_attack_parameters()
+    attack_parameters = properties.attack_parameters()
   },
   add_item_properties
   {
@@ -612,8 +474,8 @@ data:extend(
   {
     type = "accumulator",
     name = "dummy-accumulator",
-    energy_source = dummy_electric_input_energy_source(),
-    picture = dummy_sprite(),
+    energy_source = properties.electric_energy_source(),
+    picture = properties.sprite(),
     charge_cooldown = 1,
     discharge_cooldown = 1
   },
@@ -628,37 +490,37 @@ data:extend(
   {
     type = "arithmetic-combinator",
     name = "dummy-arithmetic-combinator",
-    plus_symbol_sprites = dummy_sprite(),
-    minus_symbol_sprites = dummy_sprite(),
-    multiply_symbol_sprites = dummy_sprite(),
-    divide_symbol_sprites = dummy_sprite(),
-    modulo_symbol_sprites = dummy_sprite(),
-    power_symbol_sprites = dummy_sprite(),
-    left_shift_symbol_sprites = dummy_sprite(),
-    right_shift_symbol_sprites = dummy_sprite(),
-    and_symbol_sprites = dummy_sprite(),
-    or_symbol_sprites = dummy_sprite(),
-    xor_symbol_sprites = dummy_sprite()
+    plus_symbol_sprites = properties.sprite(),
+    minus_symbol_sprites = properties.sprite(),
+    multiply_symbol_sprites = properties.sprite(),
+    divide_symbol_sprites = properties.sprite(),
+    modulo_symbol_sprites = properties.sprite(),
+    power_symbol_sprites = properties.sprite(),
+    left_shift_symbol_sprites = properties.sprite(),
+    right_shift_symbol_sprites = properties.sprite(),
+    and_symbol_sprites = properties.sprite(),
+    or_symbol_sprites = properties.sprite(),
+    xor_symbol_sprites = properties.sprite()
   },
   {
     type = "arrow",
     name = "dummy-arrow",
-    arrow_picture = dummy_sprite()
+    arrow_picture = properties.sprite()
   },
   {
     type = "artillery-flare",
     name = "dummy-artillery-flare",
     life_time = 1,
-    pictures = dummy_animation(),
-    render_layer = dummy_render_layer,
-    render_layer_when_on_ground = dummy_render_layer,
-    map_color = dummy_color()
+    pictures = properties.animation(),
+    render_layer = properties.render_layer,
+    render_layer_when_on_ground = properties.render_layer,
+    map_color = properties.color()
   },
   {
     type = "artillery-projectile",
     name = "dummy-artillery-projectile",
     reveal_map = true,
-    map_color = dummy_color()
+    map_color = properties.color()
   },
   {
     type = "artillery-turret",
@@ -684,18 +546,18 @@ data:extend(
     type = "assembling-machine",
     name = "dummy-assembling-machine",
     energy_usage = "1J",
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     crafting_speed = 1,
     crafting_categories = {"crafting"}
   },
   {
     type = "beacon",
     name = "dummy-beacon",
-    animation = dummy_animation(),
-    animation_shadow = dummy_animation(),
-    base_picture = dummy_sprite(),
+    animation = properties.animation(),
+    animation_shadow = properties.animation(),
+    base_picture = properties.sprite(),
     distribution_effectivity = 1,
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     energy_usage = "1J",
     module_specification = {},
     supply_area_distance = 1
@@ -703,10 +565,10 @@ data:extend(
   {
     type = "beam",
     name = "dummy-beam",
-    body = dummy_animation(),
+    body = properties.animation(),
     damage_interval = 1,
-    head = dummy_animation(),
-    tail = dummy_animation(),
+    head = properties.animation(),
+    tail = properties.animation(),
     width = 1
   },
   {
@@ -714,16 +576,16 @@ data:extend(
     name = "dummy-boiler",
     burning_cooldown = 1,
     energy_consumption = "1J",
-    energy_source = dummy_void_energy_source(),
-    fluid_box = dummy_fluid_box(),
-    output_fluid_box = dummy_fluid_box(),
+    energy_source = properties.void_energy_source(),
+    fluid_box = properties.fluid_box(),
+    output_fluid_box = properties.fluid_box(),
     target_temperature = 1,
     structure =
     {
-      north = dummy_sprite(),
-      east = dummy_sprite(),
-      south = dummy_sprite(),
-      west = dummy_sprite(),
+      north = properties.sprite(),
+      east = properties.sprite(),
+      south = properties.sprite(),
+      west = properties.sprite(),
     },
     fire = {},
     fire_glow = {},
@@ -731,17 +593,17 @@ data:extend(
   {
     type = "burner-generator",
     name = "dummy-burner-generator",
-    animation = dummy_animation(),
-    burner = dummy_burner_energy_source(),
-    energy_source = dummy_electric_input_energy_source(), -- HACK
+    animation = properties.animation(),
+    burner = properties.burner_energy_source(),
+    energy_source = properties.electric_energy_source(),
     max_power_output = "1J"
   },
   add_vehicle_properties
   {
     type = "car",
     name = "dummy-car",
-    animation = dummy_rotated_animation(),
-    energy_source = dummy_void_energy_source(),
+    animation = properties.rotated_animation(),
+    energy_source = properties.void_energy_source(),
     consumption = "1J",
     effectivity = 1,
     inventory_size = 1,
@@ -760,8 +622,8 @@ data:extend(
     running_speed = 1,
     distance_per_frame = 1,
     maximum_corner_sliding_distance = 1,
-    heartbeat = dummy_sound(),
-    eat = dummy_sound(),
+    heartbeat = properties.sound(),
+    eat = properties.sound(),
     inventory_size = 1,
     build_distance = 1,
     drop_item_distance = 1,
@@ -773,17 +635,17 @@ data:extend(
     ticks_to_keep_aiming_direction = 1,
     ticks_to_stay_in_combat = 1,
     ticks_to_stay_in_combat = 1,
-    damage_hit_tint = dummy_color(),
+    damage_hit_tint = properties.color(),
     running_sound_animation_positions = {},
     mining_with_tool_particles_animation_positions = {},
     animations =
     {
       {
-        idle = dummy_rotated_animation(),
-        idle_with_gun = dummy_rotated_animation(),
-        running = dummy_rotated_animation(),
-        running_with_gun = dummy_rotated_sprite_custom_direction_count(18),
-        mining_with_tool = dummy_rotated_animation()
+        idle = properties.rotated_animation(),
+        idle_with_gun = properties.rotated_animation(),
+        running = properties.rotated_animation(),
+        running_with_gun = properties.rotated_sprite_custom_direction_count(18),
+        mining_with_tool = properties.rotated_animation()
       }
     }
   },
@@ -791,66 +653,66 @@ data:extend(
     type = "character-corpse",
     name = "dummy-character-corpse",
     time_to_live = 1,
-    picture = dummy_animation()
+    picture = properties.animation()
   },
   {
     type = "cliff",
     name = "dummy-cliff",
-    grid_offset = dummy_vector(),
+    grid_offset = properties.vector(),
     grid_size = {1, 1}, -- must be non-zero vector
     orientations =  {
-      west_to_east = dummy_oriented_cliff_prototype(),
-      north_to_south = dummy_oriented_cliff_prototype(),
-      east_to_west = dummy_oriented_cliff_prototype(),
-      south_to_north = dummy_oriented_cliff_prototype(),
-      west_to_north = dummy_oriented_cliff_prototype(),
-      north_to_east = dummy_oriented_cliff_prototype(),
-      east_to_south = dummy_oriented_cliff_prototype(),
-      south_to_west = dummy_oriented_cliff_prototype(),
-      west_to_south = dummy_oriented_cliff_prototype(),
-      north_to_west = dummy_oriented_cliff_prototype(),
-      east_to_north = dummy_oriented_cliff_prototype(),
-      south_to_east = dummy_oriented_cliff_prototype(),
-      west_to_none = dummy_oriented_cliff_prototype(),
-      none_to_east = dummy_oriented_cliff_prototype(),
-      north_to_none = dummy_oriented_cliff_prototype(),
-      none_to_south = dummy_oriented_cliff_prototype(),
-      east_to_none = dummy_oriented_cliff_prototype(),
-      none_to_west = dummy_oriented_cliff_prototype(),
-      south_to_none = dummy_oriented_cliff_prototype(),
-      none_to_north = dummy_oriented_cliff_prototype()
+      west_to_east = properties.oriented_cliff_prototype(),
+      north_to_south = properties.oriented_cliff_prototype(),
+      east_to_west = properties.oriented_cliff_prototype(),
+      south_to_north = properties.oriented_cliff_prototype(),
+      west_to_north = properties.oriented_cliff_prototype(),
+      north_to_east = properties.oriented_cliff_prototype(),
+      east_to_south = properties.oriented_cliff_prototype(),
+      south_to_west = properties.oriented_cliff_prototype(),
+      west_to_south = properties.oriented_cliff_prototype(),
+      north_to_west = properties.oriented_cliff_prototype(),
+      east_to_north = properties.oriented_cliff_prototype(),
+      south_to_east = properties.oriented_cliff_prototype(),
+      west_to_none = properties.oriented_cliff_prototype(),
+      none_to_east = properties.oriented_cliff_prototype(),
+      north_to_none = properties.oriented_cliff_prototype(),
+      none_to_south = properties.oriented_cliff_prototype(),
+      east_to_none = properties.oriented_cliff_prototype(),
+      none_to_west = properties.oriented_cliff_prototype(),
+      south_to_none = properties.oriented_cliff_prototype(),
+      none_to_north = properties.oriented_cliff_prototype()
     }
   },
   {
     type = "combat-robot",
     name = "dummy-combat-robot",
     speed = 1,
-    attack_parameters = dummy_attack_parameters(),
-    idle = dummy_rotated_animation(),
-    in_motion = dummy_rotated_animation(),
-    shadow_idle = dummy_rotated_animation(),
-    shadow_in_motion = dummy_rotated_animation(),
+    attack_parameters = properties.attack_parameters(),
+    idle = properties.rotated_animation(),
+    in_motion = properties.rotated_animation(),
+    shadow_idle = properties.rotated_animation(),
+    shadow_in_motion = properties.rotated_animation(),
     time_to_live = 1
   },
   {
     type = "constant-combinator",
     name = "dummy-constant-combinator",
     item_slot_count = 1,
-    sprites = dummy_sprite(),
-    activity_led_sprites = dummy_sprite(),
+    sprites = properties.sprite(),
+    activity_led_sprites = properties.sprite(),
     activity_led_light_offsets =
     {
-      dummy_vector(),
-      dummy_vector(),
-      dummy_vector(),
-      dummy_vector()
+      properties.vector(),
+      properties.vector(),
+      properties.vector(),
+      properties.vector()
     },
     circuit_wire_connection_points =
     {
-      dummy_wire_connection_point(),
-      dummy_wire_connection_point(),
-      dummy_wire_connection_point(),
-      dummy_wire_connection_point()
+      properties.wire_connection_point(),
+      properties.wire_connection_point(),
+      properties.wire_connection_point(),
+      properties.wire_connection_point()
     }
   },
   {
@@ -858,14 +720,14 @@ data:extend(
     name = "dummy-construction-robot",
     speed = 1,
     max_payload_size = 1,
-    cargo_centered = dummy_vector(),
-    construction_vector = dummy_vector()
+    cargo_centered = properties.vector(),
+    construction_vector = properties.vector()
   },
   {
     type = "container",
     name = "dummy-container",
     inventory_size = 1,
-    picture = dummy_sprite()
+    picture = properties.sprite()
   },
   {
     type = "corpse",
@@ -874,18 +736,18 @@ data:extend(
   {
     type = "curved-rail",
     name = "dummy-curved-rail",
-    pictures = dummy_rail_pictures()
+    pictures = properties.rail_pictures()
   },
   add_combinator_properties
   {
     type = "decider-combinator",
     name = "dummy-decider-combinator",
-    equal_symbol_sprites = dummy_sprite(),
-    greater_or_equal_symbol_sprites = dummy_sprite(),
-    greater_symbol_sprites = dummy_sprite(),
-    less_or_equal_symbol_sprites = dummy_sprite(),
-    less_symbol_sprites = dummy_sprite(),
-    not_equal_symbol_sprites = dummy_sprite()
+    equal_symbol_sprites = properties.sprite(),
+    greater_or_equal_symbol_sprites = properties.sprite(),
+    greater_symbol_sprites = properties.sprite(),
+    less_or_equal_symbol_sprites = properties.sprite(),
+    less_symbol_sprites = properties.sprite(),
+    not_equal_symbol_sprites = properties.sprite()
   },
   {
     type = "deconstructible-tile-proxy",
@@ -898,22 +760,22 @@ data:extend(
   {
     type = "electric-energy-interface",
     name = "dummy-electric-energy-interface",
-    energy_source = dummy_electric_input_energy_source() -- HACK ?
+    energy_source = properties.electric_energy_source()
   },
   {
     type = "electric-pole",
     name = "dummy-electric-pole",
     connection_points = {
-      dummy_wire_connection_point()
+      properties.wire_connection_point()
     },
-    pictures = dummy_rotated_sprite(),
+    pictures = properties.rotated_sprite(),
     supply_area_distance = 1
   },
   add_turret_properties
   {
     type = "electric-turret",
     name = "dummy-electric-turret",
-    energy_source = dummy_void_energy_source()
+    energy_source = properties.void_energy_source()
   },
   {
     type = "entity-ghost",
@@ -922,25 +784,25 @@ data:extend(
   {
     type = "explosion",
     name = "dummy-explosion",
-    animations = dummy_animation()
+    animations = properties.animation()
   },
   {
     type = "fire",
     name = "dummy-fire",
-    damage_per_tick = dummy_damage_prototype(),
+    damage_per_tick = properties.damage_prototype(),
     spread_delay = 1,
     spread_delay_deviation = 1
   },
   {
     type = "fish",
     name = "dummy-fish",
-    pictures = dummy_sprite()
+    pictures = properties.sprite()
   },
   {
     type = "flame-thrower-explosion",
     name = "dummy-flame-thrower-explosion",
-    animations = dummy_animation(),
-    damage = dummy_damage_prototype(),
+    animations = properties.animation(),
+    damage = properties.damage_prototype(),
     slow_down_factor = 1
   },
   add_turret_properties
@@ -948,7 +810,7 @@ data:extend(
     type = "fluid-turret",
     name = "dummy-fluid-turret",
     activation_buffer_ratio = 1,
-    fluid_box = dummy_fluid_box(),
+    fluid_box = properties.fluid_box(),
     fluid_buffer_input_flow = 1,
     fluid_buffer_size = 1,
     turret_base_has_direction = true
@@ -969,7 +831,7 @@ data:extend(
     type = "furnace",
     name = "dummy-furnace",
     energy_usage = "1J",
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     crafting_speed = 1,
     crafting_categories = {"crafting"},
     result_inventory_size = 1,
@@ -979,78 +841,78 @@ data:extend(
     type = "gate",
     name = "dummy-gate",
     activation_distance = 1,
-    close_sound = dummy_sound(),
-    open_sound = dummy_sound(),
-    horizontal_animation = dummy_animation(),
-    horizontal_rail_animation_left = dummy_animation(),
-    horizontal_rail_animation_right = dummy_animation(),
-    horizontal_rail_base = dummy_animation(),
+    close_sound = properties.sound(),
+    open_sound = properties.sound(),
+    horizontal_animation = properties.animation(),
+    horizontal_rail_animation_left = properties.animation(),
+    horizontal_rail_animation_right = properties.animation(),
+    horizontal_rail_base = properties.animation(),
     opening_speed = 1,
     timeout_to_close = 1,
-    vertical_animation = dummy_animation(),
-    vertical_rail_animation_left = dummy_animation(),
-    vertical_rail_animation_right = dummy_animation(),
-    vertical_rail_base = dummy_animation(),
-    wall_patch = dummy_animation()
+    vertical_animation = properties.animation(),
+    vertical_rail_animation_left = properties.animation(),
+    vertical_rail_animation_right = properties.animation(),
+    vertical_rail_base = properties.animation(),
+    wall_patch = properties.animation()
   },
   {
     type = "generator",
     name = "dummy-generator",
     effectivity = 1,
-    energy_source = dummy_electric_input_energy_source(), -- HACK
-    fluid_box = dummy_fluid_box(),
+    energy_source = properties.electric_energy_source(),
+    fluid_box = properties.fluid_box(),
     fluid_usage_per_tick = 1,
-    horizontal_animation = dummy_animation(),
+    horizontal_animation = properties.animation(),
     maximum_temperature = 1,
-    vertical_animation = dummy_animation(),
+    vertical_animation = properties.animation(),
     max_power_output = "1J"
   },
   {
     type = "heat-interface",
     name = "dummy-heat-interface",
-    heat_buffer = dummy_heat_buffer()
+    heat_buffer = properties.heat_buffer()
   },
   {
     type = "heat-pipe",
     name = "dummy-heat-pipe",
-    heat_buffer = dummy_heat_buffer(),
+    heat_buffer = properties.heat_buffer(),
     connection_sprites =
     {
-      single = {dummy_sprite()},
-      straight_vertical = {dummy_sprite()},
-      straight_horizontal = {dummy_sprite()},
-      corner_right_down = {dummy_sprite()},
-      corner_left_down = {dummy_sprite()},
-      corner_right_up = {dummy_sprite()},
-      corner_left_up = {dummy_sprite()},
-      t_up = {dummy_sprite()},
-      t_right = {dummy_sprite()},
-      t_down = {dummy_sprite()},
-      t_left = {dummy_sprite()},
-      ending_up = {dummy_sprite()},
-      ending_right = {dummy_sprite()},
-      ending_down = {dummy_sprite()},
-      ending_left = {dummy_sprite()},
-      cross = {dummy_sprite()}
+      single = properties.sprite(),
+      straight_vertical = properties.sprite(),
+      straight_horizontal = properties.sprite(),
+      corner_right_down = properties.sprite(),
+      corner_left_down = properties.sprite(),
+      corner_right_up = properties.sprite(),
+      corner_left_up = properties.sprite(),
+      t_up = properties.sprite(),
+      t_right = properties.sprite(),
+      t_down = properties.sprite(),
+      t_left = properties.sprite(),
+      ending_up = properties.sprite(),
+      ending_right = properties.sprite(),
+      ending_down = properties.sprite(),
+      ending_left = properties.sprite(),
+      cross = properties.sprite()
     },
     heat_glow_sprites =
     {
-      single = {dummy_sprite()},
-      straight_vertical = {dummy_sprite()},
-      straight_horizontal = {dummy_sprite()},
-      corner_right_down = {dummy_sprite()},
-      corner_left_down = {dummy_sprite()},
-      corner_right_up = {dummy_sprite()},
-      corner_left_up = {dummy_sprite()},
-      t_up = {dummy_sprite()},
-      t_right = {dummy_sprite()},
-      t_down = {dummy_sprite()},
-      t_left = {dummy_sprite()},
-      ending_up = {dummy_sprite()},
-      ending_right = {dummy_sprite()},
-      ending_down = {dummy_sprite()},
-      ending_left = {dummy_sprite()},
-      cross = {dummy_sprite()}
+      single = properties.sprite(),
+      straight_vertical = properties.sprite(),
+      straight_horizontal = properties.sprite(),
+      corner_right_down = properties.sprite(),
+      corner_left_down = properties.sprite(),
+      corner_right_up = properties.sprite(),
+      corner_left_up = properties.sprite(),
+      t_up = properties.sprite(),
+      t_right = properties.sprite(),
+      t_down = properties.sprite(),
+      t_left = properties.sprite(),
+      ending_up = properties.sprite(),
+      ending_right = properties.sprite(),
+      ending_down = properties.sprite(),
+      ending_left = properties.sprite(),
+      cross = properties.sprite()
     }
   },
   {
@@ -1061,7 +923,7 @@ data:extend(
     type = "infinity-container",
     name = "dummy-infinity-container",
     inventory_size = 1,
-    picture = dummy_sprite(),
+    picture = properties.sprite(),
     erase_contents_when_mined = true
   },
   add_pipe_properties
@@ -1078,15 +940,15 @@ data:extend(
     pickup_position = {0, -1},
     insert_position = {0, 1.2},
 
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     extension_speed = 1,
-    hand_base_picture = dummy_sprite(),
-    hand_base_shadow = dummy_sprite(),
-    hand_closed_picture = dummy_sprite(),
-    hand_closed_shadow = dummy_sprite(),
-    hand_open_picture = dummy_sprite(),
-    hand_open_shadow = dummy_sprite(),
-    platform_picture = dummy_sprite(),
+    hand_base_picture = properties.sprite(),
+    hand_base_shadow = properties.sprite(),
+    hand_closed_picture = properties.sprite(),
+    hand_closed_shadow = properties.sprite(),
+    hand_open_picture = properties.sprite(),
+    hand_open_shadow = properties.sprite(),
+    platform_picture = properties.sprite(),
     rotation_speed = 1
   },
   {
@@ -1096,30 +958,30 @@ data:extend(
   {
     type = "item-request-proxy",
     name = "item-request-proxy", -- also a core prototype
-    picture = dummy_sprite()
+    picture = properties.sprite()
   },
   {
     type = "lab",
     name = "dummy-lab",
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     energy_usage = "1J",
     inputs = {},
-    off_animation = dummy_animation(),
-    on_animation = dummy_animation()
+    off_animation = properties.animation(),
+    on_animation = properties.animation()
   },
   {
     type = "lamp",
     name = "dummy-lamp",
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     energy_usage_per_tick = "1J",
-    picture_off = dummy_sprite(),
-    picture_on = dummy_sprite()
+    picture_off = properties.sprite(),
+    picture_on = properties.sprite()
   },
   {
     type = "land-mine",
     name = "dummy-land-mine",
-    picture_safe = dummy_sprite(),
-    picture_set = dummy_sprite(),
+    picture_safe = properties.sprite(),
+    picture_set = properties.sprite(),
     trigger_radius = 1
   },
   {
@@ -1133,8 +995,8 @@ data:extend(
     filter_count = 1,
     structure =
     {
-      direction_in = dummy_sprite(),
-      direction_out  = dummy_sprite()
+      direction_in = properties.sprite(),
+      direction_out  = properties.sprite()
     }
   },
   add_transport_belt_connectable_properties
@@ -1144,15 +1006,15 @@ data:extend(
     filter_count = 1,
     structure =
     {
-      direction_in = dummy_sprite(),
-      direction_out  = dummy_sprite()
+      direction_in = properties.sprite(),
+      direction_out  = properties.sprite()
     }
   },
   add_rolling_stock_properties
   {
     type = "locomotive",
     name = "dummy-locomotive",
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     max_power = "1J",
     reversing_power_modifier = 1
   },
@@ -1160,7 +1022,7 @@ data:extend(
     type = "logistic-container",
     name = "dummy-logistic-container",
     inventory_size = 1,
-    picture = dummy_sprite(),
+    picture = properties.sprite(),
     logistic_mode = "active-provider"
   },
   {
@@ -1168,33 +1030,33 @@ data:extend(
     name = "dummy-logistic-robot",
     speed = 1,
     max_payload_size = 1,
-    cargo_centered = dummy_vector()
+    cargo_centered = properties.vector()
   },
   {
     type = "market",
     name = "dummy-market",
-    picture = dummy_sprite()
+    picture = properties.sprite()
   },
   {
     type = "mining-drill",
     name = "dummy-mining-drill",
-    animations = dummy_animation(),
-    energy_source = dummy_void_energy_source(),
+    animations = properties.animation(),
+    energy_source = properties.void_energy_source(),
     energy_usage = "1J",
     mining_speed = 1,
     resource_categories = {"basic-solid"},
     resource_searching_radius = 1,
-    vector_to_place_result = dummy_vector()
+    vector_to_place_result = properties.vector()
   },
   {
     type = "offshore-pump",
     name = "dummy-offshore-pump",
     fluid = "water",
-    fluid_box = dummy_fluid_box(),
+    fluid_box = properties.fluid_box(),
     pumping_speed = 1,
     graphics_set =
     {
-      animation = dummy_animation()
+      animation = properties.animation()
     }
   },
   {
@@ -1219,54 +1081,54 @@ data:extend(
   {
     type = "pipe-to-ground",
     name = "dummy-pipe-to-ground",
-    fluid_box = dummy_fluid_box(),
+    fluid_box = properties.fluid_box(),
     pictures = {
-      down = dummy_sprite(),
-      up = dummy_sprite(),
-      left = dummy_sprite(),
-      right = dummy_sprite(),
+      down = properties.sprite(),
+      up = properties.sprite(),
+      left = properties.sprite(),
+      right = properties.sprite(),
     }
   },
   {
     type = "player-port",
     name = "dummy-player-port",
-    animation = dummy_animation()
+    animation = properties.animation()
   },
   {
     type = "power-switch",
     name = "dummy-power-switch",
-    circuit_wire_connection_point = dummy_wire_connection_point(),
-    led_off = dummy_sprite(),
-    led_on = dummy_sprite(),
-    left_wire_connection_point = dummy_wire_connection_point(),
-    overlay_loop = dummy_animation(),
-    overlay_start = dummy_animation(),
+    circuit_wire_connection_point = properties.wire_connection_point(),
+    led_off = properties.sprite(),
+    led_on = properties.sprite(),
+    left_wire_connection_point = properties.wire_connection_point(),
+    overlay_loop = properties.animation(),
+    overlay_start = properties.animation(),
     overlay_start_delay = 1,
-    power_on_animation = dummy_animation(),
-    right_wire_connection_point = dummy_wire_connection_point()
+    power_on_animation = properties.animation(),
+    right_wire_connection_point = properties.wire_connection_point()
   },
   {
     type = "programmable-speaker",
     name = "dummy-programmable-speaker",
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     energy_usage_per_tick = "1J",
     instruments = {},
     maximum_polyphony = 1,
-    sprite = dummy_sprite()
+    sprite = properties.sprite()
   },
   {
     type = "projectile",
     name = "dummy-projectile",
     acceleration = 1,
-    animation = dummy_animation()
+    animation = properties.animation()
   },
   {
     type = "pump",
     name = "dummy-pump",
-    animations = dummy_animation(),
-    energy_source = dummy_void_energy_source(),
+    animations = properties.animation(),
+    energy_source = properties.void_energy_source(),
     energy_usage = "1J",
-    fluid_box = dummy_fluid_box(),
+    fluid_box = properties.fluid_box(),
     pumping_speed = 1
   },
   {
@@ -1274,21 +1136,21 @@ data:extend(
     name = "dummy-radar",
     energy_per_nearby_scan = "1J",
     energy_per_sector = "1J",
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     energy_usage = "1J",
     max_distance_of_nearby_sector_revealed = 1,
     max_distance_of_sector_revealed = 1,
-    pictures = dummy_rotated_sprite()
+    pictures = properties.rotated_sprite()
   },
   {
     type = "rail-chain-signal",
     name = "dummy-rail-chain-signal",
-    animation = dummy_rotated_animation(),
+    animation = properties.rotated_animation(),
     -- HACK
     selection_box_offsets= (function()
         local t = {}
         for i=1,8 do
-          t[#t+1] = dummy_vector()
+          t[#t+1] = properties.vector()
         end
         return t
       end)()
@@ -1297,46 +1159,46 @@ data:extend(
     type = "rail-remnants",
     name = "dummy-rail-remnants",
     bending_type = "straight",
-    pictures = dummy_rail_pictures(),
-    collision_box = dummy_nonzero_bounding_box()
+    pictures = properties.rail_pictures(),
+    collision_box = properties.nonzero_bounding_box()
   },
   {
     type = "rail-signal",
     name = "dummy-rail-signal",
-    animation = dummy_rotated_animation()
+    animation = properties.rotated_animation()
   },
   {
     type = "reactor",
     name = "dummy-reactor",
     consumption = "1J",
-    energy_source = dummy_void_energy_source(),
-    heat_buffer = dummy_heat_buffer(),
-    working_light_picture = dummy_sprite()
+    energy_source = properties.void_energy_source(),
+    heat_buffer = properties.heat_buffer(),
+    working_light_picture = properties.sprite()
   },
   {
     type = "resource",
     name = "dummy-resource",
     stage_counts = {},
-    stages = dummy_animation(),
+    stages = properties.animation(),
     minable = {mining_time = 1}
   },
   {
     type = "roboport",
     name = "dummy-roboport",
-    base = dummy_sprite(),
-    base_animation = dummy_animation(),
-    base_patch = dummy_sprite(),
+    base = properties.sprite(),
+    base_animation = properties.animation(),
+    base_patch = properties.sprite(),
     charge_approach_distance = 1,
     charging_energy = "1J",
     construction_radius = 1,
-    door_animation_down = dummy_animation(),
-    door_animation_up = dummy_animation(),
-    energy_source = dummy_void_energy_source(),
+    door_animation_down = properties.animation(),
+    door_animation_up = properties.animation(),
+    energy_source = properties.void_energy_source(),
     energy_usage = "1J",
     logistics_radius = 1,
     material_slots_count = 1,
     recharge_minimum = "1J",
-    recharging_animation = dummy_animation(),
+    recharging_animation = properties.animation(),
     request_to_open_door_timeout = 1,
     robot_slots_count = 0, -- workaround (1 errors)
     spawn_and_station_height = 1
@@ -1345,32 +1207,32 @@ data:extend(
     type = "rocket-silo",
     name = "dummy-rocket-silo",
     energy_usage = "1J",
-    energy_source = dummy_void_energy_source(),
+    energy_source = properties.void_energy_source(),
     crafting_speed = 1,
     crafting_categories = {"crafting"},
     active_energy_usage = "1J",
     idle_energy_usage = "1J",
     lamp_energy_usage = "1J",
     rocket_entity = "dummy-rocket-silo-rocket",
-    satellite_animation = dummy_animation(),
-    satellite_shadow_animation = dummy_animation(),
-    arm_02_right_animation = dummy_animation(),
-    arm_01_back_animation = dummy_animation(),
-    arm_03_front_animation = dummy_animation(),
-    shadow_sprite = dummy_sprite(),
-    hole_sprite = dummy_sprite(),
-    hole_light_sprite = dummy_sprite(),
-    rocket_shadow_overlay_sprite = dummy_sprite(),
-    rocket_glow_overlay_sprite = dummy_sprite(),
-    door_back_sprite = dummy_sprite(),
-    door_front_sprite = dummy_sprite(),
-    base_day_sprite = dummy_sprite(),
-    base_front_sprite = dummy_sprite(),
-    red_lights_back_sprites = dummy_sprite(),
-    red_lights_front_sprites = dummy_sprite(),
-    hole_clipping_box = dummy_bounding_box(),
-    door_back_open_offset = dummy_vector(),
-    door_front_open_offset = dummy_vector(),
+    satellite_animation = properties.animation(),
+    satellite_shadow_animation = properties.animation(),
+    arm_02_right_animation = properties.animation(),
+    arm_01_back_animation = properties.animation(),
+    arm_03_front_animation = properties.animation(),
+    shadow_sprite = properties.sprite(),
+    hole_sprite = properties.sprite(),
+    hole_light_sprite = properties.sprite(),
+    rocket_shadow_overlay_sprite = properties.sprite(),
+    rocket_glow_overlay_sprite = properties.sprite(),
+    door_back_sprite = properties.sprite(),
+    door_front_sprite = properties.sprite(),
+    base_day_sprite = properties.sprite(),
+    base_front_sprite = properties.sprite(),
+    red_lights_back_sprites = properties.sprite(),
+    red_lights_front_sprites = properties.sprite(),
+    hole_clipping_box = properties.bounding_box(),
+    door_back_open_offset = properties.vector(),
+    door_front_open_offset = properties.vector(),
     silo_fade_out_start_distance = 1,
     silo_fade_out_end_distance = 1,
     times_to_blink = 1,
@@ -1381,24 +1243,24 @@ data:extend(
   {
     type = "rocket-silo-rocket",
     name = "dummy-rocket-silo-rocket",
-    rocket_sprite = dummy_sprite(),
-    rocket_shadow_sprite = dummy_sprite(),
-    rocket_glare_overlay_sprite = dummy_sprite(),
-    rocket_smoke_bottom1_animation = dummy_animation(),
-    rocket_smoke_bottom2_animation = dummy_animation(),
-    rocket_smoke_top1_animation = dummy_animation(),
-    rocket_smoke_top2_animation = dummy_animation(),
-    rocket_smoke_top3_animation = dummy_animation(),
-    rocket_flame_animation = dummy_animation(),
-    rocket_flame_left_animation = dummy_animation(),
-    rocket_flame_right_animation = dummy_animation(),
-    rocket_rise_offset = dummy_vector(),
+    rocket_sprite = properties.sprite(),
+    rocket_shadow_sprite = properties.sprite(),
+    rocket_glare_overlay_sprite = properties.sprite(),
+    rocket_smoke_bottom1_animation = properties.animation(),
+    rocket_smoke_bottom2_animation = properties.animation(),
+    rocket_smoke_top1_animation = properties.animation(),
+    rocket_smoke_top2_animation = properties.animation(),
+    rocket_smoke_top3_animation = properties.animation(),
+    rocket_flame_animation = properties.animation(),
+    rocket_flame_left_animation = properties.animation(),
+    rocket_flame_right_animation = properties.animation(),
+    rocket_rise_offset = properties.vector(),
     rocket_flame_left_rotation = 1,
     rocket_flame_right_rotation = 1,
     rocket_render_layer_switch_distance = 1,
     full_render_layer_switch_distance = 1,
     full_render_layer_switch_distance = 1,
-    rocket_launch_offset = dummy_vector(),
+    rocket_launch_offset = properties.vector(),
     effects_fade_in_start_distance = 1,
     effects_fade_in_end_distance = 1,
     shadow_fade_out_start_ratio = 1,
@@ -1417,33 +1279,33 @@ data:extend(
   {
     type = "simple-entity",
     name = "dummy-simple-entity",
-    picture = dummy_sprite()
+    picture = properties.sprite()
   },
   {
     type = "simple-entity-with-force",
     name = "dummy-simple-entity-with-force",
-    picture = dummy_sprite()
+    picture = properties.sprite()
   },
   {
     type = "simple-entity-with-owner",
     name = "dummy-simple-entity-with-owner",
-    picture = dummy_sprite()
+    picture = properties.sprite()
   },
   {
     type = "smoke",
     name = "smoke-for-migration", -- deprecated prototype
-    animation = dummy_animation()
+    animation = properties.animation()
   },
   {
     type = "smoke-with-trigger",
     name = "dummy-smoke-with-trigger",
-    animation = dummy_animation()
+    animation = properties.animation()
   },
   {
     type = "solar-panel",
     name = "dummy-solar-panel",
-    energy_source = dummy_electric_input_energy_source(), -- HACK
-    picture = dummy_sprite(),
+    energy_source = properties.electric_energy_source(),
+    picture = properties.sprite(),
     production = "1J"
   },
   {
@@ -1457,10 +1319,10 @@ data:extend(
     name = "dummy-splitter",
     structure =
     {
-      north = dummy_animation(),
-      east = dummy_animation(),
-      south = dummy_animation(),
-      west = dummy_animation()
+      north = properties.animation(),
+      east = properties.animation(),
+      south = properties.animation(),
+      west = properties.animation()
     }
   },
   {
@@ -1472,21 +1334,21 @@ data:extend(
     type = "storage-tank",
     name = "dummy-storage-tank",
     flow_length_in_ticks = 1,
-    fluid_box = dummy_fluid_box(),
+    fluid_box = properties.fluid_box(),
     pictures =
     {
-      picture = dummy_sprite(),
-      window_background = dummy_sprite(),
-      fluid_background = dummy_sprite(),
-      flow_sprite = dummy_sprite(),
-      gas_flow = dummy_animation()
+      picture = properties.sprite(),
+      window_background = properties.sprite(),
+      fluid_background = properties.sprite(),
+      flow_sprite = properties.sprite(),
+      gas_flow = properties.animation()
     },
-    window_bounding_box = dummy_bounding_box()
+    window_bounding_box = properties.bounding_box()
   },
   {
     type = "straight-rail",
     name = "dummy-straight-rail",
-    pictures = dummy_rail_pictures()
+    pictures = properties.rail_pictures()
   },
   {
     type = "stream",
@@ -1515,43 +1377,43 @@ data:extend(
       frame_main = (function()
         local t = {}
         for i=1,7 do
-          t[#t+1] = dummy_animation()
+          t[#t+1] = properties.animation()
         end
         return t
       end)(),
       frame_shadow = (function()
         local t = {}
         for i=1,7 do
-          t[#t+1] = dummy_animation()
+          t[#t+1] = properties.animation()
         end
         return t
       end)(),
-      frame_main_scanner = dummy_animation(),
+      frame_main_scanner = properties.animation(),
       frame_main_scanner_movement_speed = 1,
-      frame_main_scanner_horizontal_start_shift = dummy_vector(),
-      frame_main_scanner_horizontal_end_shift = dummy_vector(),
+      frame_main_scanner_horizontal_start_shift = properties.vector(),
+      frame_main_scanner_horizontal_end_shift = properties.vector(),
       frame_main_scanner_horizontal_y_scale = 1,
       frame_main_scanner_horizontal_rotation = 1,
-      frame_main_scanner_vertical_start_shift = dummy_vector(),
-      frame_main_scanner_vertical_end_shift = dummy_vector(),
+      frame_main_scanner_vertical_start_shift = properties.vector(),
+      frame_main_scanner_vertical_end_shift = properties.vector(),
       frame_main_scanner_vertical_y_scale = 1,
       frame_main_scanner_vertical_rotation = 1,
-      frame_main_scanner_cross_horizontal_start_shift = dummy_vector(),
-      frame_main_scanner_cross_horizontal_end_shift = dummy_vector(),
+      frame_main_scanner_cross_horizontal_start_shift = properties.vector(),
+      frame_main_scanner_cross_horizontal_end_shift = properties.vector(),
       frame_main_scanner_cross_horizontal_y_scale = 1,
       frame_main_scanner_cross_horizontal_rotation = 1,
-      frame_main_scanner_cross_vertical_start_shift = dummy_vector(),
-      frame_main_scanner_cross_vertical_end_shift = dummy_vector(),
+      frame_main_scanner_cross_vertical_start_shift = properties.vector(),
+      frame_main_scanner_cross_vertical_end_shift = properties.vector(),
       frame_main_scanner_cross_vertical_y_scale = 1,
       frame_main_scanner_cross_vertical_rotation = 1,
-      frame_main_scanner_nw_ne = dummy_animation(),
-      frame_main_scanner_sw_se = dummy_animation()
+      frame_main_scanner_nw_ne = properties.animation(),
+      frame_main_scanner_sw_se = properties.animation()
     }
   },
   {
     type = "tree",
     name = "dummy-tree",
-    pictures = dummy_sprite()
+    pictures = properties.sprite()
   },
   add_turret_properties
   {
@@ -1565,26 +1427,26 @@ data:extend(
     max_distance = 1,
     structure =
     {
-      direction_in = dummy_sprite(),
-      direction_out = dummy_sprite()
+      direction_in = properties.sprite(),
+      direction_out = properties.sprite()
     },
-    underground_sprite = dummy_sprite()
+    underground_sprite = properties.sprite()
   },
   {
     type = "unit",
     name = "small-biter", -- also a core prototype
-    attack_parameters = dummy_attack_parameters(),
+    attack_parameters = properties.attack_parameters(),
     distance_per_frame = 1,
     distraction_cooldown = 1,
     movement_speed = 1,
     pollution_to_join_attack = 1,
-    run_animation = dummy_rotated_animation(),
+    run_animation = properties.rotated_animation(),
     vision_distance = 1
   },
   {
     type = "unit-spawner",
     name = "dummy-unit-spawner",
-    animations = dummy_animation(),
+    animations = properties.animation(),
     call_for_help_radius = 1,
     max_count_of_owned_units = 1,
     max_friends_around_to_spawn = 1,
@@ -1602,14 +1464,14 @@ data:extend(
     name = "dummy-wall",
     pictures =
     {
-      single = dummy_sprite(),
-      straight_vertical = dummy_sprite(),
-      straight_horizontal = dummy_sprite(),
-      corner_right_down = dummy_sprite(),
-      corner_left_down = dummy_sprite(),
-      t_up = dummy_sprite(),
-      ending_right = dummy_sprite(),
-      ending_left = dummy_sprite()
+      single = properties.sprite(),
+      straight_vertical = properties.sprite(),
+      straight_horizontal = properties.sprite(),
+      corner_right_down = properties.sprite(),
+      corner_left_down = properties.sprite(),
+      t_up = properties.sprite(),
+      ending_right = properties.sprite(),
+      ending_left = properties.sprite()
     }
   },
   -- equipment
@@ -1618,8 +1480,8 @@ data:extend(
     type = "active-defense-equipment",
     name = "dummy-active-defense-equipment",
     automatic = false,
-    ability_icon = dummy_sprite(),
-    attack_parameters = dummy_attack_parameters()
+    ability_icon = properties.sprite(),
+    attack_parameters = properties.attack_parameters()
   },
   add_equipment_properties
   {
@@ -1666,7 +1528,7 @@ data:extend(
     charge_approach_distance = 1,
     charging_energy = "1J",
     construction_radius = 1,
-    recharging_animation = dummy_animation(),
+    recharging_animation = properties.animation(),
     spawn_and_station_height = 1
   },
   add_equipment_properties
@@ -1698,11 +1560,11 @@ data:extend(
       empty_transitions = true,
       main = {{
         count = 1,
-        picture = dummy_32px_sprite_filename,
+        picture = properties.sprite_filename_32px,
         size = 1
       }}
     },
-    map_color = dummy_color(),
+    map_color = properties.color(),
     pollution_absorption_per_second = 1
   },
   {
@@ -1752,7 +1614,7 @@ data:extend(
   {
     type = "trivial-smoke",
     name = "smoke-building",
-    animation = dummy_animation(),
+    animation = properties.animation(),
     duration = 1,
     cyclic = true
   },
