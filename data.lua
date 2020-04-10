@@ -4,13 +4,144 @@ require("entities")
 require("equipment")
 
 -- The utility constants are defined in the core mod.
---   Removing this property means trigger-target-type "common" and "ground-unit" do not have to be created.
+--   Removing this property means trigger-target-types "common" and "ground-unit" do not have to be created.
 data.raw["utility-constants"]["default"].default_trigger_target_mask_by_type = nil
 
-data:extend(
-{
+-- This prototype is not required, however in versions below 0.18.19 the game crashes when loading a map that contains an assembler with a recipe.
+--   In version 0.18.19 this bug is fixed, so above that game version, this prototype may be removed.
+data:extend({
+  properties.add_icon
   {
-    -- copied from vanila
+    type = "recipe",
+    name = "dummy-recipe",
+    ingredients = {},
+    results = {},
+    subgroup = "other"
+  }
+})
+
+-- Miscellaneous prototypes that are required by the required prototypes. Mostly categories.
+data:extend({
+  {
+    type = "recipe-category",
+    name = "crafting"
+  },
+  {
+    type = "resource-category",
+    name = "basic-solid"
+  },
+  {
+    type = "fuel-category",
+    name = "chemical"
+  },
+  {
+    type = "ammo-category",
+    name = "dummy-ammo-category"
+  },
+  {
+    type = "equipment-category",
+    name = "dummy-equipment-category"
+  },
+  {
+    type = "module-category",
+    name = "dummy-module-category"
+  },
+  {
+    type = "optimized-particle",
+    name = "dummy-optimized-particle",
+    life_time = 2,
+    pictures = properties.animation(),
+    render_layer = properties.render_layer,
+    render_layer_when_on_ground = properties.render_layer
+  },
+  properties.add_icon
+  {
+    type = "item-group",
+    name = "dummy-item-group"
+  }
+})
+
+-- The remaining core prototypes
+--   Core prototypes are named prototypes that the game requires to always exist, for example a "signal-everything" virtual signal.
+--   Core prototypes that are items or entities are included in items.lua and entities.lua respectively.
+data:extend({
+  {
+    type = "item-subgroup",
+    name = "other",
+    group = "dummy-item-group"
+  },
+  properties.add_icon
+  {
+    type = "fluid",
+    name = "dummy-fluid",
+    base_color = properties.color(),
+    default_temperature = 1,
+    flow_color = properties.color(),
+    max_temperature = 1,
+    subgroup = "other"
+  },
+  {
+    type = "tile",
+    name = "dummy-tile",
+    collision_mask = {"ground-tile"},
+    layer = 1,
+    variants =
+    {
+      empty_transitions = true,
+      main = {{
+        count = 1,
+        picture = properties.sprite_filename_32px,
+        size = 1
+      }}
+    },
+    map_color = properties.color(),
+    pollution_absorption_per_second = 1
+  },
+  {
+    type = "equipment-grid",
+    name = "dummy-equipment-grid",
+    equipment_categories = {"dummy-equipment-category"},
+    height = 1,
+    width = 1
+  },
+  properties.add_icon
+  {
+    type = "virtual-signal",
+    name = "signal-everything",
+    subgroup = "other"
+  },
+  properties.add_icon
+  {
+    type = "virtual-signal",
+    name = "signal-anything",
+    subgroup = "other"
+  },
+  properties.add_icon
+  {
+    type = "virtual-signal",
+    name = "signal-each",
+    subgroup = "other"
+  },
+    {
+    type = "damage-type",
+    name = "physical"
+  },
+  {
+    type = "damage-type",
+    name = "impact"
+  },
+  {
+    type = "trivial-smoke",
+    name = "smoke-building",
+    animation = properties.animation(),
+    duration = 1,
+    cyclic = true
+  }
+})
+
+-- The map settings are required, despite not being a core prototype. These map settings are simply a copy from the base mod.
+data:extend({
+  {
     type="map-settings",
     name="map-settings",
 
@@ -136,132 +267,5 @@ data:extend(
        -- technology_price_multiplier -- not needed
        -- research_queue_setting -- not needed
     }
-  },
-
-  -- default categories
-  {
-    type = "recipe-category",
-    name = "crafting"
-  },
-  {
-    type = "resource-category",
-    name = "basic-solid"
-  },
-  {
-    type = "fuel-category",
-    name = "chemical"
-  },
-
-  -- stuff needed for core prototypes
-  properties.add_icon
-  {
-    type = "item-group",
-    name = "dummy-item-group"
-  },
-
-  -- core prototypes
-  {
-    type = "item-subgroup",
-    name = "other",
-    group = "dummy-item-group"
-  },
-  properties.add_icon
-  {
-    type = "fluid",
-    name = "dummy-fluid",
-    base_color = properties.color(),
-    default_temperature = 1,
-    flow_color = properties.color(),
-    max_temperature = 1,
-    subgroup = "other"
-  },
-  {
-    type = "tile",
-    name = "dummy-tile",
-    collision_mask = {"ground-tile"},
-    layer = 1,
-    variants =
-    {
-      empty_transitions = true,
-      main = {{
-        count = 1,
-        picture = properties.sprite_filename_32px,
-        size = 1
-      }}
-    },
-    map_color = properties.color(),
-    pollution_absorption_per_second = 1
-  },
-  {
-    type = "equipment-grid",
-    name = "dummy-equipment-grid",
-    equipment_categories = {"dummy-equipment-category"},
-    height = 1,
-    width = 1
-  },
-  properties.add_icon
-  {
-    type = "virtual-signal",
-    name = "signal-everything",
-    subgroup = "other"
-  },
-  properties.add_icon
-  {
-    type = "virtual-signal",
-    name = "signal-anything",
-    subgroup = "other"
-  },
-  properties.add_icon
-  {
-    type = "virtual-signal",
-    name = "signal-each",
-    subgroup = "other"
-  },
-    {
-    type = "damage-type",
-    name = "physical"
-  },
-  {
-    type = "damage-type",
-    name = "impact"
-  },
-  {
-    type = "trivial-smoke",
-    name = "smoke-building",
-    animation = properties.animation(),
-    duration = 1,
-    cyclic = true
-  },
-
-  -- stuff needed for prototypes
-  {
-    type = "ammo-category",
-    name = "dummy-ammo-category"
-  },
-  {
-    type = "equipment-category",
-    name = "dummy-equipment-category"
-  },
-  {
-    type = "module-category",
-    name = "dummy-module-category"
-  },
-  {
-    type = "optimized-particle",
-    name = "dummy-optimized-particle",
-    life_time = 2, -- workaround (1 errors)
-    pictures = properties.animation(),
-    render_layer = properties.render_layer,
-    render_layer_when_on_ground = properties.render_layer
-  },
-
-  -- needed for maps to load in versions below 0.18.19
-  properties.add_icon
-  {
-    type = "recipe",
-    name = "dummy-recipe",
-    ingredients = {},
-    results = {},
-    subgroup = "other"
   }
 })

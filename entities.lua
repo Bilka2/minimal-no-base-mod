@@ -849,7 +849,7 @@ data:extend({
     recharge_minimum = "1J",
     recharging_animation = properties.animation(),
     request_to_open_door_timeout = 1,
-    robot_slots_count = 0, -- workaround (1 errors)
+    robot_slots_count = 0,
     spawn_and_station_height = 1
   },
   {
@@ -1003,7 +1003,7 @@ data:extend({
     type = "stream",
     name = "dummy-stream",
     particle_horizontal_speed = 1,
-    particle_horizontal_speed_deviation = 0, -- workaround (1 errors)
+    particle_horizontal_speed_deviation = 0,
     particle_spawn_interval = 1,
     particle_vertical_acceleration = 1
   },
