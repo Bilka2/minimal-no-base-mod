@@ -1,5 +1,6 @@
 local dummy_sound_filename = "__core__/sound/achievement-unlocked.ogg"
 local dummy_sprite_filename = "__core__/graphics/empty.png"
+local dummy_32px_sprite_filename = "__core__/graphics/bonus-icon.png"
 local dummy_render_layer = "object"
 
 -- TODO Bilka: idk where to put this
@@ -27,6 +28,13 @@ end
 local function dummy_rotated_sprite()
   local sprite = dummy_sprite()
   sprite.direction_count = 1
+  return sprite
+end
+local function dummy_rotated_sprite_custom_direction_count(direction_count)
+  -- HACK
+  local sprite = dummy_sprite()
+  sprite.filename = dummy_32px_sprite_filename
+  sprite.direction_count = direction_count
   return sprite
 end
 local function dummy_8_way_sprite()
@@ -258,12 +266,7 @@ local function add_transport_belt_connectable_properties(prototype)
   prototype.speed = 1
   prototype.belt_animation_set =
   {
-    -- HACK
-    animation_set = (function()
-        local a = dummy_rotated_animation()
-        a.direction_count = 20
-        return a
-      end)()
+    animation_set = dummy_rotated_sprite_custom_direction_count(20)
   }
   return prototype
 end
@@ -463,14 +466,14 @@ data:extend(
     name = "physical" -- also a core prototype
   },
   add_dummy_icon
-  { -- TODO move down to normal prototypes / core prototypes ?
+  {
     type = "fluid",
     name = "water", -- also a core prototype
     base_color = dummy_color(),
     default_temperature = 1,
     flow_color = dummy_color(),
     max_temperature = 1,
-    subgroup = "other" -- not the default for an optional property!!! HACK ?
+    subgroup = "other"
   },
   {
     type = "optimized-particle",
@@ -779,12 +782,7 @@ data:extend(
         idle = dummy_rotated_animation(),
         idle_with_gun = dummy_rotated_animation(),
         running = dummy_rotated_animation(),
-         -- HACK
-        running_with_gun = (function()
-            local a = dummy_rotated_animation()
-            a.direction_count = 18
-            return a
-          end)(),
+        running_with_gun = dummy_rotated_sprite_custom_direction_count(18),
         mining_with_tool = dummy_rotated_animation()
       }
     }
@@ -799,7 +797,7 @@ data:extend(
     type = "cliff",
     name = "dummy-cliff",
     grid_offset = dummy_vector(),
-    grid_size = dummy_vector(),
+    grid_size = {1, 1}, -- must be non-zero vector
     orientations =  {
       west_to_east = dummy_oriented_cliff_prototype(),
       north_to_south = dummy_oriented_cliff_prototype(),
@@ -1005,6 +1003,7 @@ data:extend(
     horizontal_animation = dummy_animation(),
     maximum_temperature = 1,
     vertical_animation = dummy_animation(),
+    max_power_output = "1J"
   },
   {
     type = "heat-interface",
@@ -1073,6 +1072,12 @@ data:extend(
   {
     type = "inserter",
     name = "dummy-inserter",
+
+    -- copied from vanilla because these values are finicky
+    collision_box = {{-0.15, -0.15}, {0.15, 0.15}},
+    pickup_position = {0, -1},
+    insert_position = {0, 1.2},
+
     energy_source = dummy_void_energy_source(),
     extension_speed = 1,
     hand_base_picture = dummy_sprite(),
@@ -1081,8 +1086,6 @@ data:extend(
     hand_closed_shadow = dummy_sprite(),
     hand_open_picture = dummy_sprite(),
     hand_open_shadow = dummy_sprite(),
-    insert_position = dummy_vector(),
-    pickup_position = dummy_vector(),
     platform_picture = dummy_sprite(),
     rotation_speed = 1
   },
@@ -1314,7 +1317,8 @@ data:extend(
     type = "resource",
     name = "dummy-resource",
     stage_counts = {},
-    stages = dummy_animation()
+    stages = dummy_animation(),
+    minable = {mining_time = 1}
   },
   {
     type = "roboport",
@@ -1445,7 +1449,7 @@ data:extend(
   {
     type = "speech-bubble",
     name = "dummy-speech-bubble",
-    style = "" -- HACK
+    style = "speech_bubble" -- defined in __core__/prototypes/style.lua
   },
   add_transport_belt_connectable_properties
   {
@@ -1670,6 +1674,87 @@ data:extend(
     type = "solar-panel-equipment",
     name = "dummy-solar-panel-equipment",
     power = "1J"
+  },
+
+  -- Needed for utility constants setup, utility constants are use them in the core mod
+  -- TODO find out if I can modify the utility constants to no longer require this
+  {
+    type = "trigger-target-type",
+    name = "common"
+  },
+  {
+    type = "trigger-target-type",
+    name = "ground-unit"
+  },
+
+  -- More core prototypes
+  {
+    type = "tile",
+    name = "grass-1",
+    collision_mask = {"ground-tile"},
+    layer = 1,
+    variants =
+    {
+      empty_transitions = true,
+      main = {{
+        count = 1,
+        picture = dummy_32px_sprite_filename,
+        size = 1
+      }}
+    },
+    map_color = dummy_color(),
+    pollution_absorption_per_second = 1
+  },
+  {
+    type = "equipment-grid",
+    name = "small-equipment-grid",
+    equipment_categories = {"dummy-equipment-category"},
+    height = 1,
+    width = 1
+  },
+  add_item_properties
+  {
+    type = "item",
+    name = "copper-cable"
+  },
+  add_item_properties
+  {
+    type = "item",
+    name = "red-wire"
+  },
+  add_item_properties
+  {
+    type = "item",
+    name = "green-wire"
+  },
+  add_dummy_icon
+  {
+    type = "virtual-signal",
+    name = "signal-everything",
+    subgroup = "other"
+  },
+  add_dummy_icon
+  {
+    type = "virtual-signal",
+    name = "signal-anything",
+    subgroup = "other"
+  },
+  add_dummy_icon
+  {
+    type = "virtual-signal",
+    name = "signal-each",
+    subgroup = "other"
+  },
+  {
+    type = "damage-type",
+    name = "impact"
+  },
+  {
+    type = "trivial-smoke",
+    name = "smoke-building",
+    animation = dummy_animation(),
+    duration = 1,
+    cyclic = true
   }
 
 })
