@@ -488,7 +488,7 @@ data:extend(
     type = "optimized-particle",
     name = "dummy-optimized-particle",
     life_time = 2, -- lol
-    pictures = {dummy_animation()},
+    pictures = dummy_animation(),
     render_layer = dummy_render_layer,
     render_layer_when_on_ground = dummy_render_layer
   },
@@ -658,7 +658,7 @@ data:extend(
     type = "artillery-flare",
     name = "dummy-artillery-flare",
     life_time = 1,
-    pictures = {dummy_animation()},
+    pictures = dummy_animation(),
     render_layer = dummy_render_layer,
     render_layer_when_on_ground = dummy_render_layer,
     map_color = dummy_color()
@@ -712,7 +712,7 @@ data:extend(
   {
     type = "beam",
     name = "dummy-beam",
-    body = {dummy_animation()},
+    body = dummy_animation(),
     damage_interval = 1,
     head = dummy_animation(),
     tail = dummy_animation(),
@@ -931,7 +931,7 @@ data:extend(
   {
     type = "explosion",
     name = "dummy-explosion",
-    animations = {dummy_animation()}
+    animations = dummy_animation()
   },
   {
     type = "fire",
@@ -943,12 +943,12 @@ data:extend(
   {
     type = "fish",
     name = "dummy-fish",
-    pictures = {dummy_sprite()}
+    pictures = dummy_sprite()
   },
   {
     type = "flame-thrower-explosion",
     name = "dummy-flame-thrower-explosion",
-    animations = {dummy_animation()},
+    animations = dummy_animation(),
     damage = dummy_damage_prototype(),
     slow_down_factor = 1
   },
@@ -1321,7 +1321,7 @@ data:extend(
     type = "resource",
     name = "dummy-resource",
     stage_counts = {},
-    stages = {dummy_animation()}
+    stages = dummy_animation()
   },
   {
     type = "roboport",
