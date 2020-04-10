@@ -12,7 +12,7 @@ end
 -- common properties
 local function dummy_color() return {1, 1, 1, 1} end -- white
 local function dummy_bounding_box() return {{0, 0}, {0, 0}} end
-local function dummy_nonzero_bounding_box() return {{-0.1, -0.1}, {0.1, 0.1}} end
+local function dummy_nonzero_bounding_box() return {{-1.0, -0.5}, {0.1, 0.1}} end -- splitter: bounding box width must be > 0.5, height must be > 1
 local function dummy_vector() return {0, 0} end
 local function dummy_sound()
   return {filename = dummy_sound_filename}
@@ -53,13 +53,14 @@ end
 local function dummy_attack_parameters()
   return
   {
-    type = "stream", -- useful for fluid turret
+    type = "stream", -- required by fluid turret
     ammo_type = -- may be redundant -- TODO Bilka: Check if this is actually the case
     {
       category = "dummy-ammo-category"
     },
     range = 1,
-    cooldown = 1
+    cooldown = 1,
+    animation = dummy_rotated_animation() -- required by unit
   }
 end
 local function dummy_rail_piece_layers()
@@ -475,9 +476,9 @@ data:extend(
     pictures = dummy_rail_pictures()
   },
   add_dummy_icon
-  { -- TODO move down to normal prototypes ?
+  { -- TODO move down to normal prototypes / core prototypes ?
     type = "fluid",
-    name = "dummy-fluid",
+    name = "water", -- also a core prototype
     base_color = dummy_color(),
     default_temperature = 1,
     flow_color = dummy_color(),
@@ -487,7 +488,7 @@ data:extend(
   {
     type = "optimized-particle",
     name = "dummy-optimized-particle",
-    life_time = 2, -- lol
+    life_time = 2, -- workaround (1 errors)
     pictures = dummy_animation(),
     render_layer = dummy_render_layer,
     render_layer_when_on_ground = dummy_render_layer
@@ -1193,7 +1194,7 @@ data:extend(
   {
     type = "offshore-pump",
     name = "dummy-offshore-pump",
-    fluid = "dummy-fluid",
+    fluid = "water",
     fluid_box = dummy_fluid_box(),
     pumping_speed = 1,
     graphics_set =
@@ -1341,7 +1342,7 @@ data:extend(
     recharge_minimum = "1J",
     recharging_animation = dummy_animation(),
     request_to_open_door_timeout = 1,
-    robot_slots_count = 0, -- oh
+    robot_slots_count = 0, -- workaround (1 errors)
     spawn_and_station_height = 1
   },
   {
@@ -1416,6 +1417,199 @@ data:extend(
   {
     type = "rocket-silo-rocket-shadow",
     name = "dummy-rocket-silo-rocket-shadow"
+  },
+  {
+    type = "simple-entity",
+    name = "dummy-simple-entity",
+    picture = dummy_sprite()
+  },
+  {
+    type = "simple-entity-with-force",
+    name = "dummy-simple-entity-with-force",
+    picture = dummy_sprite()
+  },
+  {
+    type = "simple-entity-with-owner",
+    name = "dummy-simple-entity-with-owner",
+    picture = dummy_sprite()
+  },
+  {
+    type = "smoke",
+    name = "smoke-for-migration", -- deprecated prototype
+    animation = dummy_animation()
+  },
+  {
+    type = "smoke-with-trigger",
+    name = "dummy-smoke-with-trigger",
+    animation = dummy_animation()
+  },
+  {
+    type = "solar-panel",
+    name = "dummy-solar-panel",
+    energy_source = dummy_electric_input_energy_source(), -- HACK
+    picture = dummy_sprite(),
+    production = "1J"
+  },
+  {
+    type = "speech-bubble",
+    name = "dummy-speech-bubble",
+    style = "" -- HACK
+  },
+  add_transport_belt_connectable_properties
+  {
+    type = "splitter",
+    name = "dummy-splitter",
+    structure =
+    {
+      north = dummy_animation(),
+      east = dummy_animation(),
+      south = dummy_animation(),
+      west = dummy_animation()
+    }
+  },
+  {
+    type = "sticker",
+    name = "dummy-sticker",
+    duration_in_ticks = 1
+  },
+  {
+    type = "storage-tank",
+    name = "dummy-storage-tank",
+    flow_length_in_ticks = 1,
+    fluid_box = dummy_fluid_box(),
+    pictures =
+    {
+      picture = dummy_sprite(),
+      window_background = dummy_sprite(),
+      fluid_background = dummy_sprite(),
+      flow_sprite = dummy_sprite(),
+      gas_flow = dummy_animation()
+    },
+    window_bounding_box = dummy_bounding_box()
+  },
+  {
+    type = "stream",
+    name = "dummy-stream",
+    particle_horizontal_speed = 1,
+    particle_horizontal_speed_deviation = 0, -- workaround (1 errors)
+    particle_spawn_interval = 1,
+    particle_vertical_acceleration = 1
+  },
+  {
+    type = "tile-ghost",
+    name = "tile-ghost" -- also a core prototype
+  },
+  {
+    type = "train-stop",
+    name = "dummy-train-stop",
+    animation_ticks_per_frame = 1
+  },
+  add_transport_belt_connectable_properties
+  {
+    type = "transport-belt",
+    name = "dummy-transport-belt",
+    connector_frame_sprites =
+    {
+      -- HACK
+      frame_main = (function()
+        local t = {}
+        for i=1,7 do
+          t[#t+1] = dummy_animation()
+        end
+        return t
+      end)(),
+      frame_shadow = (function()
+        local t = {}
+        for i=1,7 do
+          t[#t+1] = dummy_animation()
+        end
+        return t
+      end)(),
+      frame_main_scanner = dummy_animation(),
+      frame_main_scanner_movement_speed = 1,
+      frame_main_scanner_horizontal_start_shift = dummy_vector(),
+      frame_main_scanner_horizontal_end_shift = dummy_vector(),
+      frame_main_scanner_horizontal_y_scale = 1,
+      frame_main_scanner_horizontal_rotation = 1,
+      frame_main_scanner_vertical_start_shift = dummy_vector(),
+      frame_main_scanner_vertical_end_shift = dummy_vector(),
+      frame_main_scanner_vertical_y_scale = 1,
+      frame_main_scanner_vertical_rotation = 1,
+      frame_main_scanner_cross_horizontal_start_shift = dummy_vector(),
+      frame_main_scanner_cross_horizontal_end_shift = dummy_vector(),
+      frame_main_scanner_cross_horizontal_y_scale = 1,
+      frame_main_scanner_cross_horizontal_rotation = 1,
+      frame_main_scanner_cross_vertical_start_shift = dummy_vector(),
+      frame_main_scanner_cross_vertical_end_shift = dummy_vector(),
+      frame_main_scanner_cross_vertical_y_scale = 1,
+      frame_main_scanner_cross_vertical_rotation = 1,
+      frame_main_scanner_nw_ne = dummy_animation(),
+      frame_main_scanner_sw_se = dummy_animation()
+    }
+  },
+  {
+    type = "tree",
+    name = "dummy-tree",
+    pictures = dummy_sprite()
+  },
+  add_turret_properties
+  {
+    type = "turret",
+    name = "dummy-turret"
+  },
+  add_transport_belt_connectable_properties
+  {
+    type = "underground-belt",
+    name = "dummy-underground-belt",
+    max_distance = 1,
+    structure =
+    {
+      direction_in = dummy_sprite(),
+      direction_out = dummy_sprite()
+    },
+    underground_sprite = dummy_sprite()
+  },
+  {
+    type = "unit",
+    name = "small-biter", -- also a core prototype
+    attack_parameters = dummy_attack_parameters(),
+    distance_per_frame = 1,
+    distraction_cooldown = 1,
+    movement_speed = 1,
+    pollution_to_join_attack = 1,
+    run_animation = dummy_rotated_animation(),
+    vision_distance = 1
+  },
+  {
+    type = "unit-spawner",
+    name = "dummy-unit-spawner",
+    animations = dummy_animation(),
+    call_for_help_radius = 1,
+    max_count_of_owned_units = 1,
+    max_friends_around_to_spawn = 1,
+    max_richness_for_spawn_shift = 1,
+    max_spawn_shift = 1,
+    pollution_absorption_absolute = 1,
+    pollution_absorption_proportional = 1,
+    result_units = {{"small-biter", {{1, 1}}}},
+    spawning_cooldown = {1, 1},
+    spawning_radius = 1,
+    spawning_spacing = 1
+  },
+  {
+    type = "wall",
+    name = "dummy-wall",
+    pictures =
+    {
+      single = dummy_sprite(),
+      straight_vertical = dummy_sprite(),
+      straight_horizontal = dummy_sprite(),
+      corner_right_down = dummy_sprite(),
+      corner_left_down = dummy_sprite(),
+      t_up = dummy_sprite(),
+      ending_right = dummy_sprite(),
+      ending_left = dummy_sprite()
+    }
   }
 
 })
