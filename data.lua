@@ -1755,6 +1755,16 @@ data:extend(
     animation = dummy_animation(),
     duration = 1,
     cyclic = true
+  },
+
+  -- making it possible to load maps. The game should require this prototype, but it does not
+  add_dummy_icon
+  {
+    type = "recipe",
+    name = "dummy-recipe",
+    ingredients = {},
+    results = {},
+    subgroup = "other"
   }
 
 })
