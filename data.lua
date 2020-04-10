@@ -1,34 +1,11 @@
 local properties = require("properties")
+require("items")
 
 -- The utility constants are defined in the core mod.
 --   Removing this property means trigger-target-type "common" and "ground-unit" do not have to be created.
 data.raw["utility-constants"]["default"].default_trigger_target_mask_by_type = nil
 
-
--- TODO Bilka: idk where to put this
-local function add_dummy_icon(prototype)
-  prototype.icon = properties.sprite_filename
-  prototype.icon_size = 1
-  return prototype
-end
-
 -- common base prototypes
--- items
-local function add_item_properties(prototype)
-  prototype = add_dummy_icon(prototype)
-  prototype.stack_size = 1
-  return prototype
-end
-local function add_selection_tool_properties(prototype)
-  prototype = add_item_properties(prototype)
-  prototype.selection_color = properties.color()
-  prototype.alt_selection_color = properties.color()
-  prototype.selection_mode = "nothing"
-  prototype.alt_selection_mode = "nothing"
-  prototype.selection_cursor_box_type = "entity"
-  prototype.alt_selection_cursor_box_type = "entity"
-  return prototype
-end
 -- entities
 local function add_turret_properties(prototype)
   prototype.call_for_help_radius = 1
@@ -297,7 +274,7 @@ data:extend(
   },
 
   -- stuff needed for core prototypes
-  add_dummy_icon
+  properties.add_icon
   {
     type = "item-group",
     name = "dummy-item-group"
@@ -309,10 +286,58 @@ data:extend(
     name = "other",
     group = "dummy-item-group"
   },
-  add_selection_tool_properties
   {
-    type = "copy-paste-tool",
-    name = "cut-paste-tool"
+    type = "tile",
+    name = "dummy-tile",
+    collision_mask = {"ground-tile"},
+    layer = 1,
+    variants =
+    {
+      empty_transitions = true,
+      main = {{
+        count = 1,
+        picture = properties.sprite_filename_32px,
+        size = 1
+      }}
+    },
+    map_color = properties.color(),
+    pollution_absorption_per_second = 1
+  },
+  {
+    type = "equipment-grid",
+    name = "dummy-equipment-grid",
+    equipment_categories = {"dummy-equipment-category"},
+    height = 1,
+    width = 1
+  },
+  properties.add_icon
+  {
+    type = "virtual-signal",
+    name = "signal-everything",
+    subgroup = "other"
+  },
+  properties.add_icon
+  {
+    type = "virtual-signal",
+    name = "signal-anything",
+    subgroup = "other"
+  },
+  properties.add_icon
+  {
+    type = "virtual-signal",
+    name = "signal-each",
+    subgroup = "other"
+  },
+  {
+    type = "damage-type",
+    name = "impact"
+  },
+  {
+    type = "trivial-smoke",
+    name = "smoke-building",
+    animation = properties.animation(),
+    duration = 1,
+    cyclic = true
   },
 
   -- stuff needed for prototypes
@@ -332,10 +357,10 @@ data:extend(
     type = "damage-type",
     name = "physical" -- also a core prototype
   },
-  add_dummy_icon
+  properties.add_icon
   {
     type = "fluid",
-    name = "water", -- also a core prototype
+    name = "dummy-fluid",
     base_color = properties.color(),
     default_temperature = 1,
     flow_color = properties.color(),
@@ -352,129 +377,6 @@ data:extend(
   },
 
   -- the prototypes
-  -- items
-  add_item_properties
-  {
-    type = "ammo",
-    name = "dummy-ammo",
-    ammo_type =
-    {
-      category = "dummy-ammo-category"
-    }
-  },
-  add_item_properties
-  {
-    type = "armor",
-    name = "dummy-armor",
-    infinite = true
-  },
-  add_selection_tool_properties
-  {
-    type = "blueprint",
-    name = "blueprint" -- also a core prototype
-  },
-  add_item_properties
-  {
-    type = "blueprint-book",
-    name = "dummy-blueprint-book",
-    inventory_size = 1
-  },
-  add_item_properties
-  {
-    type = "capsule",
-    name = "dummy-capsule",
-    capsule_action =
-    {
-      type = "equipment-remote", -- seems the simplest
-      equipment = "dummy-active-defense-equipment"
-    }
-  },
-  add_selection_tool_properties
-  {
-    type = "copy-paste-tool",
-    name = "copy-paste-tool" -- also a core prototype
-  },
-  add_selection_tool_properties
-  {
-    type = "deconstruction-item",
-    name = "dummy-deconstruction-item"
-  },
-  add_item_properties
-  {
-    type = "gun",
-    name = "dummy-gun",
-    attack_parameters = properties.attack_parameters()
-  },
-  add_item_properties
-  {
-    type = "item",
-    name = "dummy-item"
-  },
-  add_item_properties
-  {
-    type = "item-with-entity-data",
-    name = "dummy-item-with-entity-data"
-  },
-  add_item_properties
-  {
-    type = "item-with-inventory",
-    name = "dummy-item-with-inventory",
-    inventory_size = 1
-  },
-  add_item_properties
-  {
-    type = "item-with-label",
-    name = "dummy-item-with-label"
-  },
-  add_item_properties
-  {
-    type = "item-with-tags",
-    name = "dummy-item-with-tags"
-  },
-  add_item_properties
-  {
-    type = "mining-tool",
-    name = "dummy-mining-tool", -- deprecated prototype
-    infinite = true
-  },
-  add_item_properties
-  {
-    type = "module",
-    name = "dummy-module",
-    tier = 1,
-    effect = {},
-    category = "dummy-module-category"
-  },
-  add_item_properties
-  {
-    type = "rail-planner",
-    name = "dummy-rail-planner",
-    straight_rail = "dummy-straight-rail",
-    curved_rail = "dummy-curved-rail"
-  },
-  add_item_properties
-  {
-    type = "repair-tool",
-    name = "dummy-repair-tool",
-    infinite = true,
-    speed = 1
-  },
-  add_selection_tool_properties
-  {
-    type = "selection-tool",
-    name = "dummy-selection-tool"
-  },
-  add_item_properties
-  {
-    type = "tool",
-    name = "dummy-tool",
-    infinite = true
-  },
-  add_selection_tool_properties
-  {
-    type = "upgrade-item",
-    name = "dummy-upgrade-item"
-  },
   -- entities
   {
     type = "accumulator",
@@ -1056,7 +958,7 @@ data:extend(
   {
     type = "offshore-pump",
     name = "dummy-offshore-pump",
-    fluid = "water",
+    fluid = "dummy-fluid",
     fluid_box = properties.fluid_box(),
     pumping_speed = 1,
     graphics_set =
@@ -1439,7 +1341,7 @@ data:extend(
   },
   {
     type = "unit",
-    name = "small-biter", -- also a core prototype
+    name = "dummy-unit",
     attack_parameters = properties.attack_parameters(),
     distance_per_frame = 1,
     distraction_cooldown = 1,
@@ -1459,7 +1361,7 @@ data:extend(
     max_spawn_shift = 1,
     pollution_absorption_absolute = 1,
     pollution_absorption_proportional = 1,
-    result_units = {{"small-biter", {{1, 1}}}},
+    result_units = {{"dummy-unit", {{1, 1}}}},
     spawning_cooldown = {1, 1},
     spawning_radius = 1,
     spawning_spacing = 1
@@ -1543,78 +1445,8 @@ data:extend(
     power = "1J"
   },
 
-  -- More core prototypes
-  {
-    type = "tile",
-    name = "grass-1",
-    collision_mask = {"ground-tile"},
-    layer = 1,
-    variants =
-    {
-      empty_transitions = true,
-      main = {{
-        count = 1,
-        picture = properties.sprite_filename_32px,
-        size = 1
-      }}
-    },
-    map_color = properties.color(),
-    pollution_absorption_per_second = 1
-  },
-  {
-    type = "equipment-grid",
-    name = "small-equipment-grid",
-    equipment_categories = {"dummy-equipment-category"},
-    height = 1,
-    width = 1
-  },
-  add_item_properties
-  {
-    type = "item",
-    name = "copper-cable"
-  },
-  add_item_properties
-  {
-    type = "item",
-    name = "red-wire"
-  },
-  add_item_properties
-  {
-    type = "item",
-    name = "green-wire"
-  },
-  add_dummy_icon
-  {
-    type = "virtual-signal",
-    name = "signal-everything",
-    subgroup = "other"
-  },
-  add_dummy_icon
-  {
-    type = "virtual-signal",
-    name = "signal-anything",
-    subgroup = "other"
-  },
-  add_dummy_icon
-  {
-    type = "virtual-signal",
-    name = "signal-each",
-    subgroup = "other"
-  },
-  {
-    type = "damage-type",
-    name = "impact"
-  },
-  {
-    type = "trivial-smoke",
-    name = "smoke-building",
-    animation = properties.animation(),
-    duration = 1,
-    cyclic = true
-  },
-
-  -- making it possible to load maps. The game should require this prototype, but it does not
-  add_dummy_icon
+  -- needed for maps to load in versions below 0.18.19
+  properties.add_icon
   {
     type = "recipe",
     name = "dummy-recipe",
@@ -1622,6 +1454,4 @@ data:extend(
     results = {},
     subgroup = "other"
   }
-
 })
-

@@ -11,7 +11,14 @@ properties.sprite_filename = "__core__/graphics/empty.png"
 properties.sprite_filename_32px = "__core__/graphics/factorio-icon.png"
 properties.render_layer = "object"
 
--- Anything that is a table is returned via a function.
+-- This function is applied directly to the prototype table and adds the icon to it
+properties.add_icon = function(prototype)
+  prototype.icon = properties.sprite_filename
+  prototype.icon_size = 1
+  return prototype
+end
+
+-- Any property that is a table is returned via a function.
 --   This means that everything gets a copy of the table, not a reference to the table.
 
 properties.color = function() return {1, 1, 1, 1} end -- white
