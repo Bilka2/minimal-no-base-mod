@@ -1,4 +1,5 @@
--- This file contains all entities.
+-- This file contains all entities, including ones that are core prototypes.
+--   Core prototypes are named prototypes that the game requires to always exist, for example a "copper-cable" item.
 
 local properties = require("common-properties")
 
