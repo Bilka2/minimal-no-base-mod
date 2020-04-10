@@ -1,25 +1,11 @@
 local properties = require("common-properties")
 require("items")
 require("entities")
+require("equipment")
 
 -- The utility constants are defined in the core mod.
 --   Removing this property means trigger-target-type "common" and "ground-unit" do not have to be created.
 data.raw["utility-constants"]["default"].default_trigger_target_mask_by_type = nil
-
--- common base prototypes
--- equipment
-local function add_equipment_properties(prototype)
-  prototype.sprite = properties.sprite()
-  prototype.shape = {
-    type = "full",
-    width = 1,
-    height = 1
-  }
-  prototype.categories = {"dummy-equipment-category"}
-  prototype.energy_source = properties.electric_energy_source()
-  prototype.take_result = "dummy-item"
-  return prototype
-end
 
 data:extend(
 {
@@ -179,6 +165,16 @@ data:extend(
     name = "other",
     group = "dummy-item-group"
   },
+  properties.add_icon
+  {
+    type = "fluid",
+    name = "dummy-fluid",
+    base_color = properties.color(),
+    default_temperature = 1,
+    flow_color = properties.color(),
+    max_temperature = 1,
+    subgroup = "other"
+  },
   {
     type = "tile",
     name = "dummy-tile",
@@ -221,6 +217,10 @@ data:extend(
     name = "signal-each",
     subgroup = "other"
   },
+    {
+    type = "damage-type",
+    name = "physical"
+  },
   {
     type = "damage-type",
     name = "impact"
@@ -247,91 +247,12 @@ data:extend(
     name = "dummy-module-category"
   },
   {
-    type = "damage-type",
-    name = "physical" -- also a core prototype
-  },
-  properties.add_icon
-  {
-    type = "fluid",
-    name = "dummy-fluid",
-    base_color = properties.color(),
-    default_temperature = 1,
-    flow_color = properties.color(),
-    max_temperature = 1,
-    subgroup = "other"
-  },
-  {
     type = "optimized-particle",
     name = "dummy-optimized-particle",
     life_time = 2, -- workaround (1 errors)
     pictures = properties.animation(),
     render_layer = properties.render_layer,
     render_layer_when_on_ground = properties.render_layer
-  },
-
-  -- the prototypes
-  -- equipment
-  add_equipment_properties
-  {
-    type = "active-defense-equipment",
-    name = "dummy-active-defense-equipment",
-    automatic = false,
-    ability_icon = properties.sprite(),
-    attack_parameters = properties.attack_parameters()
-  },
-  add_equipment_properties
-  {
-    type = "battery-equipment",
-    name = "dummy-battery-equipment"
-  },
-  add_equipment_properties
-  {
-    type = "belt-immunity-equipment",
-    name = "dummy-belt-immunity-equipment",
-    energy_consumption = "1J"
-  },
-  add_equipment_properties
-  {
-    type = "energy-shield-equipment",
-    name = "dummy-energy-shield-equipment",
-    energy_per_shield = "1J",
-    max_shield_value = 1
-  },
-  add_equipment_properties
-  {
-    type = "generator-equipment",
-    name = "dummy-generator-equipment",
-    power = "1J"
-  },
-  add_equipment_properties
-  {
-    type = "movement-bonus-equipment",
-    name = "dummy-movement-bonus-equipment",
-    energy_consumption = "1J",
-    movement_bonus = 1
-  },
-  add_equipment_properties
-  {
-    type = "night-vision-equipment",
-    name = "dummy-night-vision-equipment",
-    energy_input = "1J",
-    color_lookup = {{1, "identity"}}
-  },
-  add_equipment_properties
-  {
-    type = "roboport-equipment",
-    name = "dummy-roboport-equipment",
-    charge_approach_distance = 1,
-    charging_energy = "1J",
-    construction_radius = 1,
-    recharging_animation = properties.animation(),
-    spawn_and_station_height = 1
-  },
-  add_equipment_properties
-  {
-    type = "solar-panel-equipment",
-    name = "dummy-solar-panel-equipment",
-    power = "1J"
   },
 
   -- needed for maps to load in versions below 0.18.19
