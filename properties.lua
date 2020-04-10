@@ -1,5 +1,5 @@
 -- Note: None of these properties are meant for use in a normal mod,
---   because they mostly produce empty images and do not function in-game beyond being loadable.
+--   because they mostly produce empty images and have no function in-game beyond being loadable.
 -- This file only contains properties that are large, or used very often.
 
 -- All properties are based on the formats documented on the wiki: https://wiki.factorio.com/Prototype_overview

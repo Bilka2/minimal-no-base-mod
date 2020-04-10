@@ -1,5 +1,10 @@
 local properties = require("properties")
 
+-- The utility constants are defined in the core mod.
+--   Removing this property means trigger-target-type "common" and "ground-unit" do not have to be created.
+data.raw["utility-constants"]["default"].default_trigger_target_mask_by_type = nil
+
+
 -- TODO Bilka: idk where to put this
 local function add_dummy_icon(prototype)
   prototype.icon = properties.sprite_filename
@@ -1536,17 +1541,6 @@ data:extend(
     type = "solar-panel-equipment",
     name = "dummy-solar-panel-equipment",
     power = "1J"
-  },
-
-  -- Needed for utility constants setup, utility constants are use them in the core mod
-  -- TODO find out if I can modify the utility constants to no longer require this
-  {
-    type = "trigger-target-type",
-    name = "common"
-  },
-  {
-    type = "trigger-target-type",
-    name = "ground-unit"
   },
 
   -- More core prototypes
