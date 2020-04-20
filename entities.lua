@@ -966,13 +966,7 @@ data:extend({
   {
     type = "splitter",
     name = "dummy-splitter",
-    structure =
-    {
-      north = properties.animation(),
-      east = properties.animation(),
-      south = properties.animation(),
-      west = properties.animation()
-    }
+    structure = properties.animation()
   },
   {
     type = "sticker",
