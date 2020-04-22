@@ -385,7 +385,8 @@ data:extend({
   {
     type = "curved-rail",
     name = "dummy-curved-rail",
-    pictures = properties.rail_pictures()
+    pictures = properties.rail_pictures(),
+    placeable_by = {item = "dummy-rail-planner", count = 1}
   },
   add_combinator_properties
   {
@@ -991,7 +992,8 @@ data:extend({
   {
     type = "straight-rail",
     name = "dummy-straight-rail",
-    pictures = properties.rail_pictures()
+    pictures = properties.rail_pictures(),
+    placeable_by = {item = "dummy-rail-planner", count = 1}
   },
   {
     type = "stream",

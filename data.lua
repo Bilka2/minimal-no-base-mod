@@ -7,19 +7,6 @@ require("equipment")
 --   Removing this property means trigger-target-types "common" and "ground-unit" do not have to be created.
 data.raw["utility-constants"]["default"].default_trigger_target_mask_by_type = nil
 
--- This prototype is not required, however in versions below 0.18.19 the game crashes when loading a map that contains an assembler with a recipe.
---   In version 0.18.19 this bug is fixed, so above that game version, this prototype may be removed.
-data:extend({
-  properties.add_icon
-  {
-    type = "recipe",
-    name = "dummy-recipe",
-    ingredients = {},
-    results = {},
-    subgroup = "other"
-  }
-})
-
 -- Miscellaneous prototypes that are required by the required prototypes. Mostly categories.
 data:extend({
   {
