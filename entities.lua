@@ -404,10 +404,6 @@ data:extend({
     name = "deconstructible-tile-proxy" -- also a core prototype
   },
   {
-    type = "decorative",
-    name = "dummy-decorative" -- deprecated prototype
-  },
-  {
     type = "electric-energy-interface",
     name = "dummy-electric-energy-interface",
     energy_source = properties.electric_energy_source()

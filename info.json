@@ -1,6 +1,6 @@
 {
   "name" : "minimal-no-base-mod",
-  "version" : "0.0.2",
+  "version" : "0.0.3",
   "title" : "Minimal mod allowing incompatibility with the base mod",
   "author" : "Bilka",
   "description" : "This mod provides the minimal prototypes needed to load the game without the base mod. Modders are encouraged to build their own mod on top of this one or depend on it to aid development of mods incompatible with the base mod.",
