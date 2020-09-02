@@ -6,6 +6,11 @@ require("equipment")
 -- The utility constants are defined in the core mod.
 --   Removing this property means trigger-target-types "common" and "ground-unit" do not have to be created.
 data.raw["utility-constants"]["default"].default_trigger_target_mask_by_type = nil
+-- The "x-unknown" prototypes are defined in the core mod.
+--   Setting the subgroup to an existing one means the default subgroup "fluid" does not have to be created.
+data.raw["fluid"]["fluid-unknown"].subgroup = "other"
+--   Setting the collision mask to something walkable means the game accepts this as the needed tile prototype.
+data.raw["tile"]["tile-unknown"].collision_mask = {"ground-tile"}
 
 -- Miscellaneous prototypes that are required by the required prototypes. Mostly categories.
 data:extend({
@@ -57,33 +62,6 @@ data:extend({
     name = "other",
     group = "dummy-item-group"
   },
-  properties.add_icon
-  {
-    type = "fluid",
-    name = "dummy-fluid",
-    base_color = properties.color(),
-    default_temperature = 1,
-    flow_color = properties.color(),
-    max_temperature = 1,
-    subgroup = "other"
-  },
-  {
-    type = "tile",
-    name = "dummy-tile",
-    collision_mask = {"ground-tile"},
-    layer = 1,
-    variants =
-    {
-      empty_transitions = true,
-      main = {{
-        count = 1,
-        picture = properties.sprite_filename_32px,
-        size = 1
-      }}
-    },
-    map_color = properties.color(),
-    pollution_absorption_per_second = 1
-  },
   {
     type = "equipment-grid",
     name = "dummy-equipment-grid",
@@ -109,7 +87,7 @@ data:extend({
     name = "signal-each",
     subgroup = "other"
   },
-    {
+  {
     type = "damage-type",
     name = "physical"
   },

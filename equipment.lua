@@ -2,9 +2,8 @@
 
 local properties = require("common-properties")
 
--- These functions are applied directly to the prototype table.
+-- This functions is applied directly to the prototype table.
 -- This allows to easily create many prototypes that inherit from the same base class/prototype, without copy pasting properties.
-
 local function add_equipment_properties(prototype)
   prototype.sprite = properties.sprite()
   prototype.shape = {

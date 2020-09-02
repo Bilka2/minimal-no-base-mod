@@ -42,7 +42,7 @@ data:extend({
   add_selection_tool_properties
   {
     type = "blueprint",
-    name = "blueprint" -- also a core prototype
+    name = "dummy-sblueprint"
   },
   add_item_properties
   {
@@ -63,7 +63,7 @@ data:extend({
   add_selection_tool_properties
   {
     type = "copy-paste-tool",
-    name = "copy-paste-tool" -- also a core prototype
+    name = "dummy-copy-paste-tool"
   },
   add_selection_tool_properties
   {
@@ -134,6 +134,12 @@ data:extend({
   {
     type = "selection-tool",
     name = "dummy-selection-tool"
+  },
+  add_item_properties
+  {
+    type = "spidertron-remote",
+    name = "dummy-spidertron-remote",
+    icon_color_indicator_mask = properties.sprite_filename
   },
   add_item_properties
   {

@@ -266,7 +266,7 @@ data:extend({
   },
   {
     type = "character",
-    name = "character", -- also a core prototype
+    name = "dummy-character",
     mining_speed = 1,
     running_speed = 1,
     distance_per_frame = 1,
@@ -282,7 +282,6 @@ data:extend({
     loot_pickup_distance = 1,
     ticks_to_keep_gun = 1,
     ticks_to_keep_aiming_direction = 1,
-    ticks_to_stay_in_combat = 1,
     ticks_to_stay_in_combat = 1,
     damage_hit_tint = properties.color(),
     running_sound_animation_positions = {},
@@ -401,7 +400,7 @@ data:extend({
   },
   {
     type = "deconstructible-tile-proxy",
-    name = "deconstructible-tile-proxy" -- also a core prototype
+    name = "dummy-deconstructible-tile-proxy"
   },
   {
     type = "electric-energy-interface",
@@ -466,12 +465,6 @@ data:extend({
     type = "fluid-wagon",
     name = "dummy-fluid-wagon",
     capacity = 1
-  },
-  {
-    type = "flying-text",
-    name = "flying-text", -- also a core prototype
-    speed = 1,
-    time_to_live = 1
   },
   {
     type = "furnace",
@@ -599,11 +592,11 @@ data:extend({
   },
   {
     type = "item-entity",
-    name = "item-on-ground" -- also a core prototype
+    name = "dummy-item-entity"
   },
   {
     type = "item-request-proxy",
-    name = "item-request-proxy", -- also a core prototype
+    name = "dummy-item-request-proxy",
     picture = properties.sprite()
   },
   {
@@ -697,7 +690,7 @@ data:extend({
   {
     type = "offshore-pump",
     name = "dummy-offshore-pump",
-    fluid = "dummy-fluid",
+    fluid = "fluid-unknown",
     fluid_box = properties.fluid_box(),
     pumping_speed = 1,
     graphics_set =
@@ -905,7 +898,6 @@ data:extend({
     rocket_flame_right_rotation = 1,
     rocket_render_layer_switch_distance = 1,
     full_render_layer_switch_distance = 1,
-    full_render_layer_switch_distance = 1,
     rocket_launch_offset = properties.vector(),
     effects_fade_in_start_distance = 1,
     effects_fade_in_end_distance = 1,
@@ -959,6 +951,39 @@ data:extend({
     name = "dummy-speech-bubble",
     style = "speech_bubble" -- defined in __core__/prototypes/style.lua
   },
+  {
+    type = "spider-leg",
+    name = "dummy-spider-leg",
+    part_length = 1,
+    initial_movement_speed = 1,
+    movement_acceleration = 1,
+    movement_based_position_selection_distance = 1,
+    graphics_set = {}
+  },
+  add_vehicle_properties
+  {
+    type = "spider-vehicle",
+    name = "dummy-spider-vehicle",
+    energy_source = properties.void_energy_source(),
+    inventory_size = 1,
+    graphics_set = {},
+    spider_engine =
+    {
+      military_target = "dummy-simple-entity-with-force",
+      legs =
+      {
+        leg = "dummy-spider-leg",
+        mount_position = properties.vector(),
+        ground_position = properties.vector(),
+        blocking_legs = {}
+      }
+    },
+    height = 1,
+    chunk_exploration_radius = 1,
+    movement_energy_consumption = "1J",
+    automatic_weapon_cycling = true,
+    chain_shooting_cooldown_modifier = 1
+  },
   add_transport_belt_connectable_properties
   {
     type = "splitter",
@@ -1001,7 +1026,7 @@ data:extend({
   },
   {
     type = "tile-ghost",
-    name = "tile-ghost" -- also a core prototype
+    name = "dummy-tile-ghost"
   },
   {
     type = "train-stop",

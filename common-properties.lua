@@ -7,7 +7,7 @@ local properties = {}
 
 properties.sound_filename = "__core__/sound/achievement-unlocked.ogg"
 properties.sprite_filename = "__core__/graphics/empty.png"
-properties.sprite_filename_32px = "__core__/graphics/factorio-icon.png"
+properties.sprite_filename_32px = "__core__/graphics/icons/unknown.png"
 properties.render_layer = "object"
 
 -- This function is applied directly to the prototype table and adds the icon to it
