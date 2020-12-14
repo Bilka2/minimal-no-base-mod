@@ -1,9 +1,9 @@
 {
   "name" : "minimal-no-base-mod",
-  "version" : "0.1.0",
+  "version" : "0.2.0",
   "title" : "Minimal mod allowing incompatibility with the base mod",
   "author" : "Bilka",
   "description" : "This mod provides the minimal prototypes needed to load the game without the base mod. Modders are encouraged to build their own mod on top of this one or depend on it to aid development of mods incompatible with the base mod.",
-  "factorio_version" : "1.0",
+  "factorio_version" : "1.1",
   "dependencies" : ["! base"]
 }

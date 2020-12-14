@@ -42,7 +42,7 @@ data:extend({
   add_selection_tool_properties
   {
     type = "blueprint",
-    name = "dummy-sblueprint"
+    name = "dummy-blueprint"
   },
   add_item_properties
   {

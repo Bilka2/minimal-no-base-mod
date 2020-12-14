@@ -220,7 +220,8 @@ data:extend({
       min_steps_to_check_path_find_termination = 2000,
       start_to_goal_cost_multiplier_to_terminate_path_find = 2000.0,
       overload_levels = {0, 100, 500},
-      overload_multipliers = {2, 3, 4}
+      overload_multipliers = {2, 3, 4},
+      negative_path_cache_delay_interval = 20
     },
 
     max_failed_behavior_count = 3,

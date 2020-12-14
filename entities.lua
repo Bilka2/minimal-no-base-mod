@@ -203,7 +203,6 @@ data:extend({
     type = "beacon",
     name = "dummy-beacon",
     animation = properties.animation(),
-    animation_shadow = properties.animation(),
     base_picture = properties.sprite(),
     distribution_effectivity = 1,
     energy_source = properties.void_energy_source(),
@@ -627,6 +626,11 @@ data:extend({
     type = "leaf-particle",
     name = "leaf-particle-for-migration" -- deprecated prototype
   },
+  {
+    type = "linked-container",
+    name = "dummy-linked-container",
+    inventory_size = 1
+  },
   add_transport_belt_connectable_properties
   {
     type = "loader",
@@ -636,7 +640,8 @@ data:extend({
     {
       direction_in = properties.sprite(),
       direction_out  = properties.sprite()
-    }
+    },
+    tile_width = 1
   },
   add_transport_belt_connectable_properties
   {
@@ -647,7 +652,9 @@ data:extend({
     {
       direction_in = properties.sprite(),
       direction_out  = properties.sprite()
-    }
+    },
+    tile_width = 1,
+    tile_height = 1
   },
   add_rolling_stock_properties
   {
@@ -958,7 +965,9 @@ data:extend({
     initial_movement_speed = 1,
     movement_acceleration = 1,
     movement_based_position_selection_distance = 1,
-    graphics_set = {}
+    graphics_set = {},
+    target_position_randomisation_distance = 1,
+    minimal_step_size = 1
   },
   add_vehicle_properties
   {
@@ -988,7 +997,8 @@ data:extend({
   {
     type = "splitter",
     name = "dummy-splitter",
-    structure = properties.animation()
+    structure = properties.animation(),
+    tile_height = 1
   },
   {
     type = "sticker",
@@ -1037,6 +1047,8 @@ data:extend({
   {
     type = "transport-belt",
     name = "dummy-transport-belt",
+    tile_width = 1,
+    tile_height = 1,
     connector_frame_sprites =
     {
       -- HACK
@@ -1091,6 +1103,8 @@ data:extend({
     type = "underground-belt",
     name = "dummy-underground-belt",
     max_distance = 1,
+    tile_width = 1,
+    tile_height = 1,
     structure =
     {
       direction_in = properties.sprite(),

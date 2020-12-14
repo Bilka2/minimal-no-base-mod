@@ -23,7 +23,7 @@ end
 properties.color = function() return {1, 1, 1, 1} end -- white
 properties.bounding_box = function() return {{0, 0}, {0, 0}} end
 -- splitter: bounding box width must be > 0.5, height must be > 1
-properties.nonzero_bounding_box = function() return {{-1.0, -0.5}, {0.1, 0.1}} end
+properties.nonzero_bounding_box = function() return {{-0.95, -1.0}, {0.1, 0.1}} end
 properties.vector = function() return {0, 0} end
 properties.sound = function()
   return {filename = properties.sound_filename}
