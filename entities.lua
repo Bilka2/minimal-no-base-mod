@@ -626,6 +626,18 @@ data:extend({
     type = "leaf-particle",
     name = "leaf-particle-for-migration" -- deprecated prototype
   },
+  add_transport_belt_connectable_properties
+  {
+    type = "linked-belt",
+    name = "dummy-linked-belt",
+    structure =
+    {
+      direction_in = properties.sprite(),
+      direction_out = properties.sprite()
+    },
+    tile_width = 1,
+    tile_height = 1
+  },
   {
     type = "linked-container",
     name = "dummy-linked-container",
